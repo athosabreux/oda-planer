@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#eee" />
+<title>ODA Suites Planer · Weinmarkt Luzern</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300,0,0" />
+<style>
+:root {
+  /* Brand */
+  --oda-offwhite: #eee;
+  --oda-red: #51080d;
+  --oda-red-dark: #280704;
+  --oda-brown: #3d2216;
+  --oda-dark: #1a1a1a;
+  --oda-green: #606f5a;
+  --oda-blue: #4a585e;
+  --oda-blue-light: #86929b;
+
+  /* Light Color Scheme */
+  --bg: #eee;
+  --bg-elev: #fff;
+  --bg-subtle: #f6f6f5;
+  --fg: #1a1a1a;
+  --fg-muted: rgba(26, 26, 26, 0.65);
+  --fg-subtle: rgba(26, 26, 26, 0.42);
+  --border: rgba(26, 26, 26, 0.10);
+  --border-strong: rgba(26, 26, 26, 0.20);
+  --hover: rgba(26, 26, 26, 0.05);
+  --accent: #1a1a1a;
+  --accent-fg: #eee;
+  --accent-hover: #2a2a2a;
+  --brand: #51080d;
+  --danger: #51080d;
+  --warning: #b88a3e;
+
+  /* System Status — wie Webflow System Error/Success/Info/Warning,
+     mit Hintergrund (15% opacity), Border + Text in voller Farbe */
+  --sys-info: #4a585e;
+  --sys-info-bg: rgba(74, 88, 94, 0.12);
+  --sys-info-border: rgba(74, 88, 94, 0.32);
+
+  --sys-progress: #2c6cb0;
+  --sys-progress-bg: rgba(44, 108, 176, 0.14);
+  --sys-progress-border: rgba(44, 108, 176, 0.38);
+
+  --sys-warn: #b88a3e;
+  --sys-warn-bg: rgba(184, 138, 62, 0.16);
+  --sys-warn-border: rgba(184, 138, 62, 0.45);
+
+  --sys-error: #51080d;
+  --sys-error-bg: rgba(81, 8, 13, 0.10);
+  --sys-error-border: rgba(81, 8, 13, 0.32);
+
+  --sys-success: #4f6f49;
+  --sys-success-bg: rgba(79, 111, 73, 0.16);
+  --sys-success-border: rgba(79, 111, 73, 0.42);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 100vw;
+  --shadow-sm: 0 1px 2px rgba(26,26,26,.06), 0 1px 3px rgba(26,26,26,.04);
+  --shadow-md: 0 4px 12px rgba(26,26,26,.08);
+  --shadow-lg: 0 12px 32px rgba(26,26,26,.12);
+  --transition: 0.4s cubic-bezier(0.625, 0.05, 0, 1);
+}
+
+html.dark, body.dark {
+  --bg: #1a1a1a;
+  --bg-elev: #232323;
+  --bg-subtle: #1f1f1f;
+  --fg: #eee;
+  --fg-muted: rgba(238, 238, 238, 0.65);
+  --fg-subtle: rgba(238, 238, 238, 0.42);
+  --border: rgba(238, 238, 238, 0.10);
+  --border-strong: rgba(238, 238, 238, 0.22);
+  --hover: rgba(238, 238, 238, 0.06);
+  --accent: #eee;
+  --accent-fg: #1a1a1a;
+  --accent-hover: #fff;
+  --brand: #c47782;
+  --danger: #d65560;
+  --warning: #d6a052;
+
+  --sys-info: #c6d0d6;
+  --sys-info-bg: rgba(134, 146, 155, 0.16);
+  --sys-info-border: rgba(134, 146, 155, 0.38);
+
+  --sys-progress: #79b0e6;
+  --sys-progress-bg: rgba(121, 176, 230, 0.16);
+  --sys-progress-border: rgba(121, 176, 230, 0.4);
+
+  --sys-warn: #e0b674;
+  --sys-warn-bg: rgba(224, 182, 116, 0.16);
+  --sys-warn-border: rgba(224, 182, 116, 0.4);
+
+  --sys-error: #e08089;
+  --sys-error-bg: rgba(224, 128, 137, 0.16);
+  --sys-error-border: rgba(224, 128, 137, 0.4);
+
+  --sys-success: #95c08e;
+  --sys-success-bg: rgba(149, 192, 142, 0.18);
+  --sys-success-border: rgba(149, 192, 142, 0.42);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px; line-height: 1.5;
+  color: var(--fg); background: var(--bg);
+  transition: background-color var(--transition), color var(--transition);
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+button { background: none; border: none; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+
+.material-symbols-rounded {
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+  user-select: none; vertical-align: middle; line-height: 1;
+  font-size: 20px;
+}
+.material-symbols-rounded.sm { font-size: 16px; }
+.material-symbols-rounded.lg { font-size: 24px; }
+.material-symbols-rounded.xl { font-size: 32px; }
+.material-symbols-rounded.fill {
+  font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+}
+
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 24px;
+  background: var(--bg-elev);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+}
+.topbar-brand { display: flex; align-items: baseline; gap: 10px; font-weight: 600; }
+.topbar-brand .brand-mark { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; color: var(--brand); }
+.topbar-brand small { color: var(--fg-muted); font-weight: 400; font-size: 13px; }
+.topbar-spacer { flex: 1; }
+.topbar-actions { display: flex; align-items: center; gap: 8px; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: var(--radius-full);
+  font-size: 12px; font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--bg-elev); white-space: nowrap;
+}
+.badge.ok { color: var(--sys-success); background: var(--sys-success-bg); border-color: var(--sys-success-border); }
+.badge.warn { color: var(--sys-warn); background: var(--sys-warn-bg); border-color: var(--sys-warn-border); }
+.badge.danger { color: var(--sys-error); background: var(--sys-error-bg); border-color: var(--sys-error-border); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 8px 14px; border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 500;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elev); color: var(--fg);
+  transition: all 0.2s ease; white-space: nowrap;
+}
+.btn:hover { background: var(--hover); border-color: var(--fg-muted); }
+.btn.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+.btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn.icon-only { width: 38px; height: 38px; padding: 0; }
+.btn.small { padding: 6px 10px; font-size: 13px; gap: 4px; }
+.btn.danger { color: var(--sys-error); border-color: var(--sys-error-border); background: transparent; }
+.btn.danger:hover { background: var(--sys-error); color: white; border-color: var(--sys-error); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn .material-symbols-rounded { font-size: 18px; }
+.btn.small .material-symbols-rounded { font-size: 16px; }
+
+.tabs {
+  display: flex; gap: 4px; padding: 4px 24px 0;
+  background: var(--bg-elev);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto; scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  padding: 12px 14px; font-size: 14px; font-weight: 500;
+  color: var(--fg-muted);
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.tab:hover { color: var(--fg); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab .material-symbols-rounded { font-size: 18px; }
+
+.main { flex: 1; padding: 28px 24px 100px; max-width: 1600px; margin: 0 auto; width: 100%; }
+@media (max-width: 768px) {
+  .topbar { padding: 12px 16px; gap: 10px; }
+  .topbar-brand small { display: none; }
+  .tabs { padding: 4px 12px 0; }
+  .tab { padding: 12px 10px; }
+  .main { padding: 16px 12px 100px; }
+}
+
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.5);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+  background: var(--bg-elev);
+  border-radius: var(--radius-xl);
+  max-width: 480px; width: 100%;
+  max-height: 92vh; overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal.wide { max-width: 760px; }
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px; border-bottom: 1px solid var(--border); gap: 12px;
+}
+.modal-header h2 { font-size: 18px; font-weight: 600; flex: 1; }
+.modal-body { padding: 24px; }
+.modal-footer {
+  display: flex; gap: 8px; justify-content: flex-end;
+  padding: 16px 24px; border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.form-group label { font-size: 13px; font-weight: 500; color: var(--fg-muted); }
+.form-group input, .form-group select, .form-group textarea {
+  padding: 10px 12px; border-radius: var(--radius-md);
+  border: 1px solid var(--border-strong);
+  background: var(--bg); color: var(--fg);
+  transition: border-color 0.2s ease;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none; border-color: var(--accent);
+}
+.form-group textarea { resize: vertical; min-height: 80px; font-family: inherit; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+
+.floor-chips, .chip-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.floor-chip, .input-chip {
+  padding: 7px 14px; border-radius: var(--radius-full);
+  border: 1px solid var(--border-strong);
+  background: var(--bg); font-size: 13px; font-weight: 500;
+  transition: all 0.2s ease; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.floor-chip.active { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+.input-chip .material-symbols-rounded { font-size: 14px; }
+.input-chip-x { color: var(--fg-muted); cursor: pointer; padding: 0 0 0 2px; }
+.input-chip-x:hover { color: var(--sys-error); }
+
+/* Dashboard KPIs */
+.kpi-grid {
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-bottom: 32px;
+}
+.kpi-card {
+  padding: 20px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.kpi-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.kpi-label {
+  font-size: 12px; color: var(--fg-muted);
+  margin-bottom: 8px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  display: flex; align-items: center; gap: 6px;
+}
+.kpi-value { font-size: 32px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
+.kpi-detail { font-size: 12px; color: var(--fg-subtle); margin-top: 8px; }
+.kpi-card.accent { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+.kpi-card.accent .kpi-label, .kpi-card.accent .kpi-detail { color: var(--accent-fg); opacity: 0.85; }
+.kpi-card.danger .kpi-value { color: var(--sys-error); }
+
+.progress-bar { height: 6px; background: var(--border); border-radius: var(--radius-full); overflow: hidden; margin-top: 10px; }
+.kpi-card.accent .progress-bar { background: rgba(238,238,238,0.2); }
+.progress-bar-fill { height: 100%; background: var(--accent); border-radius: var(--radius-full); transition: width 0.6s ease; }
+.kpi-card.accent .progress-bar-fill { background: var(--accent-fg); }
+
+.section { margin-bottom: 32px; }
+.section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; gap: 12px; }
+.section-head h2 { font-size: 18px; font-weight: 600; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; }
+.section-head .actions { display: flex; gap: 8px; }
+
+/* Task table */
+.task-table-wrap {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.task-filter-bar {
+  display: flex; gap: 8px; padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap; align-items: center;
+  background: var(--bg-subtle);
+}
+.task-filter-bar .search-input { flex: 1; min-width: 200px; position: relative; }
+.task-filter-bar .search-input .material-symbols-rounded {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--fg-subtle);
+}
+.task-filter-bar .search-input input {
+  width: 100%; padding: 7px 10px 7px 34px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-strong);
+  background: var(--bg); font-size: 13px;
+}
+.task-filter-bar select {
+  padding: 7px 10px; border-radius: var(--radius-md);
+  border: 1px solid var(--border-strong);
+  background: var(--bg); font-size: 13px;
+}
+
+.task-table-scroll {
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent;
+}
+.task-table-scroll::-webkit-scrollbar { height: 8px; }
+.task-table-scroll::-webkit-scrollbar-track { background: transparent; }
+.task-table-scroll::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: var(--radius-full); }
+
+.task-table {
+  width: 100%; min-width: 1000px;
+  border-collapse: collapse; font-size: 14px;
+}
+.task-table th, .task-table td {
+  padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle; white-space: nowrap;
+}
+.task-table th {
+  font-size: 11px; font-weight: 600;
+  color: var(--fg-muted);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  background: var(--bg-subtle);
+  position: sticky; top: 0; z-index: 1;
+}
+.task-table tr { transition: background 0.15s ease; }
+.task-table tbody tr:hover { background: var(--hover); cursor: pointer; }
+.task-table tr.done { opacity: 0.5; }
+.task-table tr.done .task-title { text-decoration: line-through; }
+
+.task-title-cell { white-space: normal; min-width: 240px; max-width: 380px; }
+.task-title { font-weight: 500; line-height: 1.3; }
+.task-title-sub {
+  font-size: 12px; color: var(--fg-muted);
+  margin-top: 2px; display: flex; align-items: center; gap: 4px;
+}
+.task-checkbox {
+  width: 22px; height: 22px; border-radius: 6px;
+  border: 2px solid var(--border-strong);
+  background: var(--bg-elev);
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s ease; flex-shrink: 0;
+}
+.task-checkbox:hover { border-color: var(--accent); }
+.task-checkbox.checked { background: var(--sys-success); border-color: var(--sys-success); color: white; }
+.task-checkbox .material-symbols-rounded { font-size: 16px; }
+
+/* Status pills WITH BACKGROUNDS */
+.status-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 11px; border-radius: var(--radius-full);
+  font-size: 12px; font-weight: 500;
+  border: 1px solid; white-space: nowrap;
+}
+.status-pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.status-Offen     { color: var(--sys-info);     background: var(--sys-info-bg);     border-color: var(--sys-info-border); }
+.status-Arbeit    { color: var(--sys-progress); background: var(--sys-progress-bg); border-color: var(--sys-progress-border); }
+.status-Wartet    { color: var(--sys-warn);     background: var(--sys-warn-bg);     border-color: var(--sys-warn-border); }
+.status-Blockiert { color: var(--sys-error);    background: var(--sys-error-bg);    border-color: var(--sys-error-border); }
+.status-Erledigt  { color: var(--sys-success);  background: var(--sys-success-bg);  border-color: var(--sys-success-border); }
+
+.floor-tags { display: flex; flex-wrap: wrap; gap: 3px; }
+.floor-tag {
+  padding: 2px 8px; background: var(--hover);
+  border-radius: 5px; font-size: 11px; font-weight: 600;
+  font-variant-numeric: tabular-nums; letter-spacing: 0.02em;
+}
+
+.contact-pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 3px 10px 3px 3px;
+  border-radius: var(--radius-full);
+  background: var(--hover);
+  font-size: 12px; font-weight: 500; white-space: nowrap;
+}
+.contact-pill .avatar {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--accent); color: var(--accent-fg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 600;
+}
+
+/* Kanban */
+.kanban {
+  display: grid; grid-template-columns: repeat(5, minmax(260px, 1fr));
+  gap: 16px; overflow-x: auto; padding-bottom: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+@media (max-width: 1100px) { .kanban { grid-template-columns: repeat(5, 280px); } }
+.kanban-col {
+  background: var(--bg-elev); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 14px; min-height: 240px;
+}
+.kanban-col-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding: 0 4px; }
+.kanban-col-head h3 { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 7px; text-transform: uppercase; letter-spacing: 0.05em; }
+.kanban-col-count { font-size: 12px; color: var(--fg-muted); background: var(--hover); padding: 2px 9px; border-radius: var(--radius-full); font-weight: 500; }
+.kanban-card {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 12px;
+  margin-bottom: 8px; cursor: pointer;
+  transition: all 0.15s ease;
+}
+.kanban-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); border-color: var(--border-strong); }
+.kanban-card-meta { display: flex; flex-wrap: wrap; gap: 5px; font-size: 11px; margin-bottom: 6px; }
+.kanban-card-title { font-size: 13px; font-weight: 500; margin-bottom: 8px; line-height: 1.35; }
+.kanban-card-foot { display: flex; flex-wrap: wrap; gap: 5px; }
+
+/* Contacts */
+.contacts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.contact-card {
+  background: var(--bg-elev); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 18px;
+  cursor: pointer; transition: all 0.2s ease;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.contact-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--accent); }
+.contact-card-head { display: flex; gap: 12px; align-items: flex-start; }
+.contact-card-avatar {
+  width: 46px; height: 46px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 600;
+  color: var(--accent-fg); flex-shrink: 0;
+}
+.contact-card-info { flex: 1; min-width: 0; }
+.contact-card-name { font-weight: 600; font-size: 15px; line-height: 1.3; }
+.contact-card-company { font-size: 13px; color: var(--fg-muted); margin-top: 2px; }
+.contact-card-trade {
+  display: inline-flex; padding: 3px 9px; margin-top: 6px;
+  background: var(--sys-info-bg); color: var(--sys-info);
+  border: 1px solid var(--sys-info-border);
+  border-radius: var(--radius-full);
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.contact-card-actions { display: flex; gap: 4px; }
+.contact-card-actions a {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 8px; border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  transition: all 0.15s ease; color: var(--fg-muted);
+}
+.contact-card-actions a:hover { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+.contact-card-actions a.disabled { opacity: 0.3; pointer-events: none; }
+.contact-stats {
+  display: flex; justify-content: space-between;
+  font-size: 12px; color: var(--fg-muted);
+  padding-top: 10px; border-top: 1px solid var(--border);
+}
+.contact-stats strong { color: var(--fg); font-weight: 600; }
+
+/* Detail meta */
+.task-detail-meta {
+  display: grid; gap: 10px;
+  grid-template-columns: 130px 1fr;
+  margin-bottom: 20px; font-size: 14px;
+}
+.task-detail-meta dt { color: var(--fg-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; align-self: center; }
+.task-detail-meta dd { font-weight: 500; }
+
+.comments { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+.comments h3 { font-size: 13px; font-weight: 600; color: var(--fg-muted); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; }
+.comment { display: flex; gap: 10px; padding: 10px 0; }
+.comment-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--oda-blue-light); color: var(--accent-fg); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+.comment-body { flex: 1; }
+.comment-meta { font-size: 12px; color: var(--fg-muted); }
+.comment-text { font-size: 14px; margin-top: 2px; white-space: pre-wrap; }
+.comment-form { display: flex; gap: 8px; margin-top: 12px; }
+.comment-form input { flex: 1; padding: 9px 12px; border-radius: var(--radius-md); border: 1px solid var(--border-strong); background: var(--bg); }
+
+/* Pill tabs */
+.pill-tabs { display: flex; gap: 6px; margin-bottom: 20px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+.pill-tabs::-webkit-scrollbar { display: none; }
+.pill-tab { padding: 8px 16px; border-radius: var(--radius-full); background: var(--bg-elev); border: 1px solid var(--border); font-size: 13px; font-weight: 500; white-space: nowrap; transition: all 0.2s ease; }
+.pill-tab:hover { border-color: var(--border-strong); }
+.pill-tab.active { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+
+.area-group { background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 16px; overflow: hidden; }
+.area-group-head { padding: 14px 18px; background: var(--bg-subtle); font-weight: 600; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+.area-group-head .area-name { display: flex; align-items: center; gap: 8px; }
+.area-group-count { color: var(--fg-muted); font-weight: 500; font-size: 12px; padding: 2px 9px; background: var(--bg-elev); border-radius: var(--radius-full); }
+
+/* Timeline */
+.timeline { background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; overflow-x: auto; }
+.timeline-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); min-width: 800px; }
+.timeline-row:last-child { border-bottom: none; }
+.timeline-task { width: 320px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.timeline-task small { display: block; color: var(--fg-muted); font-weight: 400; margin-top: 2px; }
+.timeline-bar-track { flex: 1; height: 26px; background: var(--bg-subtle); border-radius: 5px; position: relative; }
+.timeline-bar { position: absolute; top: 4px; bottom: 4px; background: var(--accent); color: var(--accent-fg); border-radius: 4px; padding: 0 8px; font-size: 11px; display: flex; align-items: center; min-width: 40px; font-weight: 500; }
+.timeline-bar.done { background: var(--sys-success); }
+.timeline-bar.blocked { background: var(--sys-error); }
+
+.empty-state { padding: 60px 20px; text-align: center; color: var(--fg-muted); }
+.empty-state .material-symbols-rounded { font-size: 48px; opacity: 0.4; margin-bottom: 12px; }
+.empty-state h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; color: var(--fg); }
+
+.loading { display: flex; align-items: center; justify-content: center; padding: 80px 20px; color: var(--fg-muted); }
+.spinner { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; margin-right: 10px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 11px 20px; border-radius: var(--radius-md); font-size: 14px; font-weight: 500; box-shadow: var(--shadow-lg); z-index: 200; animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; gap: 8px; }
+@keyframes toastIn { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+.fab { position: fixed; right: 24px; bottom: 24px; width: 56px; height: 56px; border-radius: 50%; background: var(--accent); color: var(--accent-fg); box-shadow: var(--shadow-lg); display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease; z-index: 40; }
+.fab:hover { transform: scale(1.05); }
+.fab:active { transform: scale(0.95); }
+.fab .material-symbols-rounded { font-size: 28px; }
+
+.flex { display: flex; }
+.gap-2 { gap: 8px; }
+.mb-2 { margin-bottom: 8px; }
+.mt-2 { margin-top: 8px; }
+.text-sm { font-size: 13px; }
+.text-muted { color: var(--fg-muted); }
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div id="app" class="app">
+  <header class="topbar">
+    <div class="topbar-brand">
+      <span class="brand-mark">ODA</span>
+      <small>Bauprojekt Weinmarkt · Luzern</small>
+    </div>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-actions">
+      <span id="countdown-badge" class="badge"></span>
+      <button id="login-btn" class="btn small" title="Login">
+        <span class="material-symbols-rounded sm">login</span>
+        <span id="login-label">Login</span>
+      </button>
+      <button id="theme-btn" class="btn icon-only" title="Theme wechseln">
+        <span class="material-symbols-rounded">dark_mode</span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-view="dashboard"><span class="material-symbols-rounded">dashboard</span>Dashboard</button>
+    <button class="tab" data-view="tasks"><span class="material-symbols-rounded">checklist</span>Aufgaben</button>
+    <button class="tab" data-view="kanban"><span class="material-symbols-rounded">view_kanban</span>Kanban</button>
+    <button class="tab" data-view="floors"><span class="material-symbols-rounded">apartment</span>Stockwerke</button>
+    <button class="tab" data-view="trades"><span class="material-symbols-rounded">construction</span>Gewerke</button>
+    <button class="tab" data-view="contacts"><span class="material-symbols-rounded">groups</span>Kontakte</button>
+    <button class="tab" data-view="timeline"><span class="material-symbols-rounded">timeline</span>Timeline</button>
+    <button class="tab" data-view="activity"><span class="material-symbols-rounded">history</span>Aktivität</button>
+  </nav>
+
+  <main class="main" id="main">
+    <div class="loading"><div class="spinner"></div> Lädt …</div>
+  </main>
+</div>
+
+<datalist id="trades-list"></datalist>
+<datalist id="companies-list"></datalist>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = 'https://nlrhutqupliplvjmjarg.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_3GHgkXj-I4VBQB1Lk90GjQ_qFWF9Ict';
+const ADMIN_CODE = 'oda2026';
+const FLOORS = ['UG','EG','OG1','OG2','OG3','DG','Balkon','Treppenhaus'];
+const STATUS_LIST = ['Offen','In Arbeit','Wartet','Blockiert','Erledigt'];
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const state = {
+  tasks: [], contacts: [], comments: [], settings: {}, activity: [],
+  currentView: 'dashboard',
+  currentFloor: 'all',
+  currentTrade: null,
+  contactDetail: null,
+  isAdmin: false, activeUser: null,
+  taskFilter: { q: '', status: '', floor: '', responsible: '' },
+};
+
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+const icon = (n, c='') => { const s = document.createElement('span'); s.className = 'material-symbols-rounded' + (c ? ' '+c : ''); s.textContent = n; return s; };
+const el = (tag, attrs={}, ...kids) => {
+  const e = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs)) {
+    if (k === 'class') e.className = v;
+    else if (k === 'html') e.innerHTML = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2).toLowerCase(), v);
+    else if (k === 'data') Object.entries(v).forEach(([dk,dv]) => e.dataset[dk] = dv);
+    else if (v !== undefined && v !== null && v !== false) e.setAttribute(k, v);
+  }
+  kids.flat().forEach(k => {
+    if (k == null || k === false) return;
+    if (typeof k === 'string' || typeof k === 'number') e.appendChild(document.createTextNode(k));
+    else e.appendChild(k);
+  });
+  return e;
+};
+const escape = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+const initials = (a, b) => {
+  const src = (a || b || '?').toString();
+  return src.split(/\s|\/|&/).filter(Boolean).map(s => s[0]||'').slice(0,2).join('').toUpperCase();
+};
+function colorFromName(name) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  const palette = ['#1a1a1a','#3d2216','#606f5a','#4a585e','#86929b','#280704'];
+  return palette[Math.abs(hash) % palette.length];
+}
+const statusClass = s => 'status-' + (s === 'In Arbeit' ? 'Arbeit' : s);
+const fmtDate = d => !d ? '—' : new Date(d).toLocaleDateString('de-CH', { day:'2-digit', month:'2-digit', year:'numeric' });
+const fmtDateShort = d => !d ? '—' : new Date(d).toLocaleDateString('de-CH', { day:'2-digit', month:'2-digit' });
+const daysUntil = d => !d ? null : Math.ceil((new Date(d).getTime() - Date.now()) / 86400000);
+
+function contactDisplay(c) {
+  if (!c) return '—';
+  if (c.name && c.company) return c.name + ' · ' + c.company;
+  if (c.company) return c.company;
+  if (c.name) return c.name;
+  return c.trade || '—';
+}
+function contactPrimary(c) { return c.name || c.company || c.trade || '—'; }
+function contactSecondary(c) {
+  if (c.name && c.company) return c.company;
+  if (c.name) return c.trade;
+  return c.trade !== c.company ? c.trade : null;
+}
+
+function toast(msg, ic='check_circle') {
+  const t = el('div', { class: 'toast' }, icon(ic, 'sm'), msg);
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translate(-50%,20px)'; }, 2200);
+  setTimeout(() => t.remove(), 2700);
+}
+
+async function loadAll() {
+  const [tR, cR, coR, sR, aR] = await Promise.all([
+    sb.from('tasks').select('*').order('code'),
+    sb.from('contacts').select('*'),
+    sb.from('comments').select('*').order('created_at', { ascending: false }),
+    sb.from('settings').select('*'),
+    sb.from('activity_log').select('*').order('created_at', { ascending: false }).limit(100),
+  ]);
+  state.tasks = tR.data || [];
+  state.contacts = cR.data || [];
+  state.contacts.sort((a,b) => {
+    const at = (a.trade || 'zzz').localeCompare(b.trade || 'zzz', 'de');
+    if (at !== 0) return at;
+    return (contactPrimary(a)).localeCompare(contactPrimary(b), 'de');
+  });
+  state.comments = coR.data || [];
+  state.activity = aR.data || [];
+  state.settings = Object.fromEntries((sR.data || []).map(s => [s.key, s.value]));
+
+  // Datalists für Autocomplete
+  const tradesDL = $('#trades-list');
+  const companiesDL = $('#companies-list');
+  tradesDL.innerHTML = '';
+  companiesDL.innerHTML = '';
+  const trades = [...new Set(state.contacts.map(c => c.trade).filter(Boolean))].sort((a,b) => a.localeCompare(b,'de'));
+  const companies = [...new Set(state.contacts.map(c => c.company).filter(Boolean))].sort((a,b) => a.localeCompare(b,'de'));
+  trades.forEach(t => tradesDL.appendChild(el('option', { value: t })));
+  companies.forEach(c => companiesDL.appendChild(el('option', { value: c })));
+}
+
+const contactById = id => state.contacts.find(c => c.id === id);
+const subContactIds = t => (t.sub_responsible_ids && t.sub_responsible_ids.length)
+  ? t.sub_responsible_ids
+  : (t.sub_responsible_id ? [t.sub_responsible_id] : []);
+const subContacts = t => subContactIds(t).map(contactById).filter(Boolean);
+const tasksForContact = cid => state.tasks.filter(t => t.responsible_id === cid || subContactIds(t).includes(cid));
+const tasksOnFloor = f => state.tasks.filter(t => (t.floors||[]).includes(f));
+const dependencies = task => task.depends_on_codes || [];
+
+function isTaskBlocked(task) {
+  const deps = dependencies(task);
+  if (!deps.length) return false;
+  return deps.some(code => {
+    const pred = state.tasks.find(t => t.code === code);
+    return pred && pred.status !== 'Erledigt';
+  });
+}
+
+function computeProjectEnd() {
+  if (state.settings.opening_date) return new Date(state.settings.opening_date);
+  const dates = state.tasks
+    .filter(t => t.planned_end && t.status !== 'Erledigt')
+    .map(t => new Date(t.planned_end).getTime());
+  if (!dates.length) return null;
+  return new Date(Math.max(...dates));
+}
+
+function updateHeader() {
+  const end = computeProjectEnd();
+  const badge = $('#countdown-badge');
+  badge.innerHTML = '';
+  if (!end) {
+    badge.appendChild(icon('event_busy', 'sm'));
+    badge.appendChild(document.createTextNode(' Kein Zieldatum'));
+    badge.className = 'badge';
+  } else {
+    const days = daysUntil(end);
+    badge.appendChild(icon(days < 0 ? 'priority_high' : 'event', 'sm'));
+    badge.appendChild(document.createTextNode(days >= 0 ? ` Noch ${days} Tage` : ` ${Math.abs(days)} Tage überfällig`));
+    badge.className = 'badge ' + (days < 7 ? 'danger' : days < 30 ? 'warn' : 'ok');
+  }
+  $('#login-label').textContent = state.isAdmin ? 'Admin' : (state.activeUser || 'Login');
+  const themeBtn = $('#theme-btn .material-symbols-rounded');
+  if (themeBtn) themeBtn.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode';
+}
+
+// ===== DASHBOARD =====
+function renderDashboard() {
+  const t = state.tasks;
+  const done = t.filter(x => x.status === 'Erledigt').length;
+  const inProgress = t.filter(x => x.status === 'In Arbeit').length;
+  const blocked = t.filter(x => x.status === 'Blockiert' || (isTaskBlocked(x) && x.status !== 'Erledigt')).length;
+  const totalH = t.reduce((s, x) => s + (Number(x.effort_hours) || 0), 0);
+  const doneH = t.filter(x => x.status === 'Erledigt').reduce((s, x) => s + (Number(x.effort_hours) || 0), 0);
+  const pct = t.length ? Math.round((done / t.length) * 100) : 0;
+
+  const byTrade = {};
+  t.filter(x => x.status !== 'Erledigt').forEach(x => {
+    const subs = subContacts(x);
+    const trades = [...new Set(subs.map(s => s.trade).filter(Boolean))];
+    if (!trades.length) {
+      const r = contactById(x.responsible_id);
+      if (r?.trade) trades.push(r.trade);
+    }
+    if (!trades.length) trades.push('—');
+    trades.forEach(tr => { byTrade[tr] = (byTrade[tr] || 0) + 1; });
+  });
+  const tradeList = Object.entries(byTrade).sort((a,b) => b[1]-a[1]);
+
+  const main = $('#main');
+  main.innerHTML = '';
+
+  main.appendChild(el('div', { class: 'kpi-grid' },
+    el('div', { class: 'kpi-card accent' },
+      el('div', { class: 'kpi-label' }, icon('trending_up', 'sm'), 'Fortschritt'),
+      el('div', { class: 'kpi-value' }, pct + '%'),
+      el('div', { class: 'progress-bar' }, el('div', { class: 'progress-bar-fill', style: `width:${pct}%` })),
+      el('div', { class: 'kpi-detail' }, `${done} von ${t.length} Aufgaben erledigt`)
+    ),
+    el('div', { class: 'kpi-card' },
+      el('div', { class: 'kpi-label' }, icon('pending_actions', 'sm'), 'In Arbeit'),
+      el('div', { class: 'kpi-value' }, inProgress),
+      el('div', { class: 'kpi-detail' }, 'aktive Aufgaben')
+    ),
+    el('div', { class: 'kpi-card' + (blocked ? ' danger' : '') },
+      el('div', { class: 'kpi-label' }, icon('block', 'sm'), 'Blockiert'),
+      el('div', { class: 'kpi-value' }, blocked),
+      el('div', { class: 'kpi-detail' }, 'warten auf Vorgänger')
+    ),
+    el('div', { class: 'kpi-card' },
+      el('div', { class: 'kpi-label' }, icon('schedule', 'sm'), 'Aufwand'),
+      el('div', { class: 'kpi-value' }, totalH.toFixed(0) + 'h'),
+      el('div', { class: 'kpi-detail' }, `${doneH.toFixed(0)}h erledigt · ${(totalH-doneH).toFixed(0)}h offen`)
+    )
+  ));
+
+  if (tradeList.length) {
+    main.appendChild(
+      el('div', { class: 'section' },
+        el('div', { class: 'section-head' }, el('h2', {}, icon('construction'), 'Offene Aufgaben nach Gewerk')),
+        el('div', { class: 'kpi-grid' },
+          ...tradeList.slice(0, 8).map(([trade, count]) =>
+            el('div', { class: 'kpi-card', style: 'cursor:pointer', onClick: () => {
+              const ct = state.contacts.find(c => c.trade === trade);
+              if (ct) { state.currentView = 'trades'; state.currentTrade = ct.id; render(); }
+            }},
+              el('div', { class: 'kpi-label' }, trade),
+              el('div', { class: 'kpi-value', style: 'font-size: 26px' }, count),
+              el('div', { class: 'kpi-detail' }, count === 1 ? 'offene Aufgabe' : 'offene Aufgaben')
+            )
+          )
+        )
+      )
+    );
+  }
+
+  const critical = t.filter(x => x.status !== 'Erledigt' && (isTaskBlocked(x) || (x.risk||0) >= 2)).slice(0, 10);
+  if (critical.length) {
+    main.appendChild(
+      el('div', { class: 'section' },
+        el('div', { class: 'section-head' }, el('h2', {}, icon('warning', 'fill'), 'Kritische Aufgaben')),
+        el('div', { class: 'task-table-wrap' }, el('div', { class: 'task-table-scroll' }, buildTaskTable(critical)))
+      )
+    );
+  }
+}
+
+// ===== TASK TABLE =====
+function buildTaskTable(tasks) {
+  const tbl = el('table', { class: 'task-table' });
+  tbl.appendChild(el('thead', {}, el('tr', {},
+    el('th', { style: 'width:46px' }, ''),
+    el('th', {}, 'Aufgabe'),
+    el('th', {}, 'Stockwerk'),
+    el('th', {}, 'Bereich'),
+    el('th', {}, 'Gewerk'),
+    el('th', {}, 'Verantwortlich'),
+    el('th', {}, 'Aufwand'),
+    el('th', {}, 'Frist'),
+    el('th', {}, 'Status')
+  )));
+  const tb = el('tbody');
+  tasks.forEach(t => tb.appendChild(buildTaskRow(t)));
+  tbl.appendChild(tb);
+  return tbl;
+}
+
+function buildTaskRow(t) {
+  const resp = contactById(t.responsible_id);
+  const subs = subContacts(t);
+  const tradeNames = [...new Set(subs.map(s => s.trade).filter(Boolean))];
+  const personContact = resp;
+  const isDone = t.status === 'Erledigt';
+  const blocked = isTaskBlocked(t) && !isDone;
+  const effective = blocked ? 'Blockiert' : t.status;
+  const deps = dependencies(t);
+
+  return el('tr', { class: isDone ? 'done' : '', onClick: () => openTaskDetail(t.id) },
+    el('td', { onClick: (e) => { e.stopPropagation(); toggleTaskDone(t); }},
+      el('div', { class: 'task-checkbox' + (isDone ? ' checked' : '') },
+        isDone ? icon('check', 'sm') : null
+      )
+    ),
+    el('td', { class: 'task-title-cell' },
+      el('div', { class: 'task-title' }, t.title),
+      deps.length ? el('div', { class: 'task-title-sub' }, icon('arrow_back', 'sm'),
+        'Abhängig von ' + deps.map(c => '#' + c).join(', ')) : null
+    ),
+    el('td', {}, el('div', { class: 'floor-tags' }, ...(t.floors||[]).map(f => el('span', { class: 'floor-tag' }, f)))),
+    el('td', {}, t.area || '—'),
+    el('td', {}, tradeNames.length
+      ? el('div', { class: 'floor-tags' }, ...tradeNames.map(tr => el('span', { class: 'floor-tag' }, tr)))
+      : '—'),
+    el('td', {}, personContact ? buildContactPill(personContact) : (subs[0] ? buildContactPill(subs[0]) : '—')),
+    el('td', {}, t.effort_hours ? t.effort_hours + ' h' : '—'),
+    el('td', {}, fmtDate(t.planned_end)),
+    el('td', {}, el('span', { class: 'status-pill ' + statusClass(effective) }, effective))
+  );
+}
+
+function buildContactPill(c) {
+  const label = contactPrimary(c);
+  const color = c.color || colorFromName(label);
+  return el('span', { class: 'contact-pill' },
+    el('span', { class: 'avatar', style: `background:${color}` }, initials(c.name, c.company)),
+    label
+  );
+}
+
+// ===== TASKS VIEW =====
+function renderTasks() {
+  const main = $('#main');
+  main.innerHTML = '';
+
+  const wrap = el('div', { class: 'task-table-wrap' });
+  const fb = el('div', { class: 'task-filter-bar' },
+    el('div', { class: 'search-input' },
+      icon('search', 'sm'),
+      el('input', { type: 'search', placeholder: 'Aufgabe oder Bereich suchen…', value: state.taskFilter.q,
+        onInput: (e) => { state.taskFilter.q = e.target.value; refreshTaskTable(); } })
+    ),
+    el('select', { onChange: (e) => { state.taskFilter.status = e.target.value; refreshTaskTable(); } },
+      el('option', { value: '' }, 'Alle Stati'),
+      ...STATUS_LIST.map(s => el('option', { value: s, selected: state.taskFilter.status === s }, s))
+    ),
+    el('select', { onChange: (e) => { state.taskFilter.floor = e.target.value; refreshTaskTable(); } },
+      el('option', { value: '' }, 'Alle Stockwerke'),
+      ...FLOORS.map(f => el('option', { value: f, selected: state.taskFilter.floor === f }, f))
+    ),
+    el('select', { onChange: (e) => { state.taskFilter.responsible = e.target.value; refreshTaskTable(); } },
+      el('option', { value: '' }, 'Alle Verantwortlichen'),
+      ...state.contacts.map(c => el('option', { value: c.id, selected: state.taskFilter.responsible === c.id },
+        contactPrimary(c) + (c.trade ? ' (' + c.trade + ')' : '')))
+    ),
+    el('button', { class: 'btn small', onClick: exportCSV }, icon('download', 'sm'), 'CSV')
+  );
+  wrap.appendChild(fb);
+  wrap.appendChild(el('div', { class: 'task-table-scroll', id: 'task-scroll' }));
+  main.appendChild(wrap);
+  refreshTaskTable();
+}
+
+function filteredTasks() {
+  const f = state.taskFilter;
+  return state.tasks.filter(t => {
+    if (f.q) {
+      const q = f.q.toLowerCase();
+      if (!t.title.toLowerCase().includes(q) && !(t.area||'').toLowerCase().includes(q)) return false;
+    }
+    if (f.status && t.status !== f.status) return false;
+    if (f.floor && !(t.floors||[]).includes(f.floor)) return false;
+    if (f.responsible && t.responsible_id !== f.responsible && !subContactIds(t).includes(f.responsible)) return false;
+    return true;
+  });
+}
+
+function refreshTaskTable() {
+  const scroll = $('#task-scroll');
+  if (!scroll) return;
+  scroll.innerHTML = '';
+  const tasks = filteredTasks();
+  scroll.appendChild(buildTaskTable(tasks));
+  if (!tasks.length) scroll.appendChild(el('div', { class: 'empty-state' }, icon('inbox', 'xl'), el('h3', {}, 'Keine Aufgaben')));
+}
+
+// ===== KANBAN =====
+function renderKanban() {
+  const main = $('#main');
+  main.innerHTML = '';
+  const wrap = el('div', { class: 'kanban' });
+  const statusIcons = { 'Offen': 'radio_button_unchecked', 'In Arbeit': 'sync', 'Wartet': 'hourglass_top', 'Blockiert': 'block', 'Erledigt': 'check_circle' };
+  STATUS_LIST.forEach(status => {
+    const tasks = state.tasks.filter(t => {
+      if (status === 'Blockiert') return t.status === 'Blockiert' || (isTaskBlocked(t) && t.status !== 'Erledigt' && t.status !== 'Blockiert');
+      if (status === 'Offen') return t.status === 'Offen' && !isTaskBlocked(t);
+      return t.status === status;
+    });
+    const col = el('div', { class: 'kanban-col' },
+      el('div', { class: 'kanban-col-head' },
+        el('h3', { class: statusClass(status) }, icon(statusIcons[status], 'sm'), status),
+        el('span', { class: 'kanban-col-count' }, tasks.length)
+      ),
+      ...tasks.map(t => buildKanbanCard(t))
+    );
+    wrap.appendChild(col);
+  });
+  main.appendChild(wrap);
+}
+
+function buildKanbanCard(t) {
+  const resp = contactById(t.responsible_id);
+  const subs = subContacts(t);
+  const tradeNames = [...new Set(subs.map(s => s.trade).filter(Boolean))];
+  return el('div', { class: 'kanban-card', onClick: () => openTaskDetail(t.id) },
+    el('div', { class: 'kanban-card-meta' },
+      ...(t.floors||[]).map(f => el('span', { class: 'floor-tag' }, f)),
+      t.area ? el('span', { class: 'floor-tag' }, t.area) : null,
+      ...tradeNames.map(tn => el('span', { class: 'floor-tag' }, tn))
+    ),
+    el('div', { class: 'kanban-card-title' }, t.title),
+    el('div', { class: 'kanban-card-foot' },
+      resp ? buildContactPill(resp) : (subs[0] ? buildContactPill(subs[0]) : null)
+    )
+  );
+}
+
+// ===== FLOORS =====
+function renderFloors() {
+  const main = $('#main');
+  main.innerHTML = '';
+  main.appendChild(el('div', { class: 'pill-tabs' },
+    el('button', { class: 'pill-tab' + (state.currentFloor === 'all' ? ' active' : ''), onClick: () => { state.currentFloor = 'all'; renderFloors(); } }, 'Alle'),
+    ...FLOORS.map(f => {
+      const c = tasksOnFloor(f).length;
+      return el('button', { class: 'pill-tab' + (state.currentFloor === f ? ' active' : ''), onClick: () => { state.currentFloor = f; renderFloors(); } }, `${f} (${c})`);
+    })
+  ));
+  let tasks = state.currentFloor === 'all' ? state.tasks : tasksOnFloor(state.currentFloor);
+  const byArea = {};
+  tasks.forEach(t => {
+    const a = t.area || 'Sonstiges';
+    (byArea[a] = byArea[a] || []).push(t);
+  });
+  Object.entries(byArea).sort((a,b) => a[0].localeCompare(b[0], 'de')).forEach(([area, list]) => {
+    const done = list.filter(x => x.status === 'Erledigt').length;
+    main.appendChild(
+      el('div', { class: 'area-group' },
+        el('div', { class: 'area-group-head' },
+          el('span', { class: 'area-name' }, icon('category', 'sm'), area),
+          el('span', { class: 'area-group-count' }, `${done}/${list.length} erledigt`)
+        ),
+        el('div', { class: 'task-table-scroll' }, buildTaskTable(list))
+      )
+    );
+  });
+  if (!tasks.length) main.appendChild(el('div', { class: 'empty-state' }, icon('apartment', 'xl'), el('h3', {}, 'Keine Aufgaben auf diesem Stockwerk')));
+}
+
+// ===== TRADES =====
+function renderTrades() {
+  const main = $('#main');
+  main.innerHTML = '';
+  // Group by trade
+  const tradeGroups = {};
+  state.contacts.forEach(c => {
+    if (!c.trade) return;
+    if (!tradeGroups[c.trade]) tradeGroups[c.trade] = [];
+    tradeGroups[c.trade].push(c);
+  });
+  // count tasks per trade
+  const trades = Object.keys(tradeGroups).sort((a,b) => a.localeCompare(b,'de'));
+
+  main.appendChild(el('div', { class: 'pill-tabs' },
+    ...trades.map(tr => {
+      const cs = tradeGroups[tr];
+      const taskIds = new Set();
+      cs.forEach(c => tasksForContact(c.id).filter(t => t.status !== 'Erledigt').forEach(t => taskIds.add(t.id)));
+      const count = taskIds.size;
+      return el('button', { class: 'pill-tab' + ((state.currentTrade && contactById(state.currentTrade)?.trade === tr) ? ' active' : ''),
+        onClick: () => { state.currentTrade = cs[0].id; renderTrades(); } }, `${tr} (${count})`);
+    })
+  ));
+  if (!state.currentTrade) {
+    main.appendChild(el('div', { class: 'empty-state' }, icon('construction', 'xl'),
+      el('h3', {}, 'Wähle ein Gewerk'), el('div', {}, 'Oben einen Filter klicken.')));
+    return;
+  }
+  const c = contactById(state.currentTrade);
+  if (!c) return;
+  const tradeContacts = tradeGroups[c.trade] || [c];
+  const allTasks = new Map();
+  tradeContacts.forEach(ct => tasksForContact(ct.id).forEach(t => allTasks.set(t.id, t)));
+  const tasks = [...allTasks.values()].sort((a,b) => a.code - b.code);
+
+  main.appendChild(
+    el('div', { class: 'section' },
+      el('div', { class: 'section-head' },
+        el('h2', {}, icon('construction'), `${c.trade} – ${tasks.length} Aufgaben`)
+      ),
+      // Show contacts in this trade
+      tradeContacts.length > 0 ? el('div', { class: 'contacts-grid', style: 'margin-bottom: 20px' },
+        ...tradeContacts.map(ct => buildContactCard(ct))
+      ) : null,
+      el('div', { class: 'task-table-wrap' }, el('div', { class: 'task-table-scroll' }, buildTaskTable(tasks)))
+    )
+  );
+}
+
+// ===== CONTACTS =====
+function renderContacts() {
+  const main = $('#main');
+  main.innerHTML = '';
+  if (state.contactDetail) { renderContactDetail(state.contactDetail); return; }
+
+  // Group by trade
+  const groups = {};
+  state.contacts.forEach(c => {
+    const k = c.trade || 'Ohne Gewerk';
+    if (!groups[k]) groups[k] = [];
+    groups[k].push(c);
+  });
+  Object.entries(groups).sort((a,b) => a[0].localeCompare(b[0], 'de')).forEach(([trade, list]) => {
+    main.appendChild(
+      el('div', { class: 'section' },
+        el('div', { class: 'section-head' },
+          el('h2', {}, icon('handyman'), trade),
+          el('span', { class: 'badge' }, list.length + ' Kontakt' + (list.length !== 1 ? 'e' : ''))
+        ),
+        el('div', { class: 'contacts-grid' }, ...list.map(c => buildContactCard(c)))
+      )
+    );
+  });
+
+  if (state.isAdmin) {
+    main.appendChild(el('button', { class: 'btn primary mt-2', onClick: () => openContactEdit() },
+      icon('add', 'sm'), 'Neuer Kontakt'
+    ));
+  }
+}
+
+function buildContactCard(c) {
+  const tasks = tasksForContact(c.id);
+  const open = tasks.filter(t => t.status !== 'Erledigt').length;
+  const primary = contactPrimary(c);
+  const secondary = contactSecondary(c);
+  const color = c.color || colorFromName(primary);
+  return el('div', { class: 'contact-card', onClick: () => { state.contactDetail = c.id; renderContacts(); } },
+    el('div', { class: 'contact-card-head' },
+      el('div', { class: 'contact-card-avatar', style: `background:${color}` }, initials(c.name, c.company)),
+      el('div', { class: 'contact-card-info' },
+        el('div', { class: 'contact-card-name' }, primary),
+        secondary ? el('div', { class: 'contact-card-company' }, secondary) : null,
+        c.trade ? el('span', { class: 'contact-card-trade' }, c.trade) : null
+      )
+    ),
+    el('div', { class: 'contact-card-actions' },
+      el('a', { href: c.phone ? `tel:${c.phone}` : '#', class: c.phone ? '' : 'disabled', title: 'Anrufen', onClick: (e) => e.stopPropagation() }, icon('call', 'sm')),
+      el('a', { href: c.whatsapp ? `https://wa.me/${c.whatsapp.replace(/\D/g,'')}` : '#', target:'_blank', class: c.whatsapp ? '' : 'disabled', title: 'WhatsApp', onClick: (e) => e.stopPropagation() }, icon('chat', 'sm')),
+      el('a', { href: c.email ? `mailto:${c.email}` : '#', class: c.email ? '' : 'disabled', title: 'E-Mail', onClick: (e) => e.stopPropagation() }, icon('mail', 'sm'))
+    ),
+    el('div', { class: 'contact-stats' },
+      el('span', {}, el('strong', {}, open), ' offen'),
+      el('span', {}, el('strong', {}, tasks.length), ' total')
+    )
+  );
+}
+
+function renderContactDetail(contactId) {
+  const main = $('#main');
+  main.innerHTML = '';
+  const c = contactById(contactId);
+  if (!c) { state.contactDetail = null; renderContacts(); return; }
+  const tasks = tasksForContact(contactId);
+  const primary = contactPrimary(c);
+  const color = c.color || colorFromName(primary);
+
+  main.appendChild(
+    el('div', { class: 'section' },
+      el('button', { class: 'btn small mb-2', onClick: () => { state.contactDetail = null; renderContacts(); } }, icon('arrow_back', 'sm'), 'Zurück'),
+      el('div', { class: 'kpi-card', style: 'display:flex; align-items:center; gap:18px; flex-wrap: wrap' },
+        el('div', { class: 'contact-card-avatar', style: `background:${color}; width:64px; height:64px; font-size:22px` }, initials(c.name, c.company)),
+        el('div', { style: 'flex:1; min-width: 180px' },
+          el('div', { style: 'font-size: 20px; font-weight: 600' }, primary),
+          c.company && c.name ? el('div', { class: 'text-muted text-sm' }, c.company) : null,
+          c.trade ? el('span', { class: 'contact-card-trade', style: 'margin-top: 8px' }, c.trade) : null,
+          el('div', { class: 'text-sm text-muted mt-2', style: 'display:flex; gap:14px; flex-wrap:wrap' },
+            c.phone ? el('span', { class: 'flex gap-2' }, icon('call', 'sm'), c.phone) : null,
+            c.email ? el('span', { class: 'flex gap-2' }, icon('mail', 'sm'), c.email) : null,
+            c.whatsapp ? el('span', { class: 'flex gap-2' }, icon('chat', 'sm'), c.whatsapp) : null
+          )
+        ),
+        el('div', { class: 'flex gap-2', style: 'flex-wrap: wrap' },
+          c.phone ? el('a', { class: 'btn', href: `tel:${c.phone}` }, icon('call', 'sm'), 'Anruf') : null,
+          c.whatsapp ? el('a', { class: 'btn', href: `https://wa.me/${c.whatsapp.replace(/\D/g,'')}`, target: '_blank' }, icon('chat', 'sm'), 'WhatsApp') : null,
+          c.email ? el('a', { class: 'btn', href: `mailto:${c.email}` }, icon('mail', 'sm'), 'Mail') : null,
+          state.isAdmin ? el('button', { class: 'btn', onClick: () => openContactEdit(c) }, icon('edit', 'sm'), 'Bearbeiten') : null
+        )
+      )
+    )
+  );
+
+  main.appendChild(
+    el('div', { class: 'section' },
+      el('div', { class: 'section-head' }, el('h2', {}, icon('checklist'), `Aufgaben (${tasks.length})`)),
+      tasks.length
+        ? el('div', { class: 'task-table-wrap' }, el('div', { class: 'task-table-scroll' }, buildTaskTable(tasks)))
+        : el('div', { class: 'empty-state' }, icon('task_alt', 'xl'), el('h3', {}, 'Keine Aufgaben'))
+    )
+  );
+}
+
+// ===== TIMELINE =====
+function renderTimeline() {
+  const main = $('#main');
+  main.innerHTML = '';
+  const withDate = state.tasks.filter(t => t.planned_end).sort((a,b) => new Date(a.planned_end) - new Date(b.planned_end));
+  if (!withDate.length) {
+    main.appendChild(el('div', { class: 'empty-state' },
+      icon('event_busy', 'xl'),
+      el('h3', {}, 'Keine Termine gepflegt'),
+      el('div', { class: 'text-muted' }, 'Sobald Liefertermine eingetragen sind, erscheinen sie hier.')
+    ));
+    return;
+  }
+  const dates = withDate.map(t => new Date(t.planned_end).getTime());
+  const min = Math.min(...dates), max = Math.max(...dates), range = max - min || 1;
+  const tl = el('div', { class: 'timeline' });
+  withDate.forEach(t => {
+    const d = new Date(t.planned_end).getTime();
+    const pct = ((d - min) / range) * 100;
+    const cls = t.status === 'Erledigt' ? 'done' : (isTaskBlocked(t) ? 'blocked' : '');
+    tl.appendChild(
+      el('div', { class: 'timeline-row', onClick: () => openTaskDetail(t.id), style: 'cursor:pointer' },
+        el('div', { class: 'timeline-task' },
+          el('strong', {}, t.title),
+          el('small', {}, (t.area || '—') + ' · ' + (t.floors||[]).join(', '))
+        ),
+        el('div', { class: 'timeline-bar-track' },
+          el('div', { class: 'timeline-bar ' + cls, style: `left: ${Math.max(0, pct-3)}%` }, fmtDateShort(t.planned_end))
+        )
+      )
+    );
+  });
+  main.appendChild(tl);
+}
+
+// ===== ACTIVITY =====
+function renderActivity() {
+  const main = $('#main');
+  main.innerHTML = '';
+  if (!state.activity.length) {
+    main.appendChild(el('div', { class: 'empty-state' }, icon('history', 'xl'), el('h3', {}, 'Noch keine Aktivität')));
+    return;
+  }
+  const wrap = el('div', { class: 'task-table-wrap' });
+  const scroll = el('div', { class: 'task-table-scroll' });
+  const tbl = el('table', { class: 'task-table' },
+    el('thead', {}, el('tr', {},
+      el('th', {}, 'Wann'),
+      el('th', {}, 'Wer'),
+      el('th', {}, 'Was'),
+      el('th', {}, 'Aufgabe')
+    )),
+    el('tbody', {},
+      ...state.activity.map(a => {
+        const t = state.tasks.find(x => x.id === a.task_id);
+        return el('tr', { onClick: () => t && openTaskDetail(t.id) },
+          el('td', {}, new Date(a.created_at).toLocaleString('de-CH', { dateStyle:'short', timeStyle:'short' })),
+          el('td', {}, a.actor),
+          el('td', {}, a.action),
+          el('td', {}, t ? t.title : '—')
+        );
+      })
+    )
+  );
+  scroll.appendChild(tbl);
+  wrap.appendChild(scroll);
+  main.appendChild(wrap);
+}
+
+// ===== TASK DETAIL =====
+function openTaskDetail(taskId) {
+  const t = state.tasks.find(x => x.id === taskId);
+  if (!t) return;
+  const resp = contactById(t.responsible_id);
+  const subs = subContacts(t);
+  const tradeNames = [...new Set(subs.map(s => s.trade).filter(Boolean))];
+  const deps = dependencies(t);
+  const isDone = t.status === 'Erledigt';
+  const blocked = isTaskBlocked(t) && !isDone;
+  const comments = state.comments.filter(c => c.task_id === taskId);
+
+  const depItems = deps.map(code => {
+    const p = state.tasks.find(x => x.code === code);
+    if (!p) return el('span', { class: 'floor-tag' }, '#' + code);
+    return el('span', { class: 'status-pill ' + statusClass(p.status), style: 'cursor:pointer', onClick: (e) => { e.stopPropagation(); closeModal(); openTaskDetail(p.id); } }, p.title);
+  });
+
+  const body = el('div', {},
+    el('dl', { class: 'task-detail-meta' },
+      el('dt', {}, 'Stockwerk'), el('dd', {}, el('div', { class: 'floor-tags' }, ...(t.floors||[]).map(f => el('span', { class: 'floor-tag' }, f)))),
+      el('dt', {}, 'Bereich'), el('dd', {}, t.area || '—'),
+      el('dt', {}, 'Gewerk(e)'), el('dd', {}, tradeNames.length
+        ? el('div', { class: 'floor-tags' }, ...tradeNames.map(tn => el('span', { class: 'floor-tag' }, tn)))
+        : '—'),
+      el('dt', {}, 'Verantwortlich'), el('dd', {}, resp ? buildContactPill(resp) : '—'),
+      subs.length ? el('dt', {}, 'Ausführung') : null,
+      subs.length ? el('dd', {}, el('div', { class: 'chip-list' }, ...subs.map(s => buildContactPill(s)))) : null,
+      el('dt', {}, 'Abhängig von'), el('dd', {}, depItems.length ? el('div', { class: 'chip-list' }, ...depItems) : '—'),
+      el('dt', {}, 'Aufwand'), el('dd', {}, t.effort_hours ? t.effort_hours + ' h' : '—'),
+      el('dt', {}, 'Lieferfrist'), el('dd', {}, fmtDate(t.planned_end)),
+      el('dt', {}, 'Status'), el('dd', {}, el('span', { class: 'status-pill ' + statusClass(blocked ? 'Blockiert' : t.status) }, blocked ? 'Blockiert' : t.status))
+    ),
+    t.notes ? el('div', { style: 'background: var(--bg-subtle); padding: 14px; border-radius: var(--radius-md); margin-bottom: 16px; font-size: 14px' },
+      el('div', { class: 'text-muted text-sm mb-2' }, 'Notizen'),
+      t.notes
+    ) : null,
+    el('div', { class: 'flex gap-2 mb-2', style: 'flex-wrap: wrap' },
+      ...STATUS_LIST.map(s => el('button', { class: 'btn small' + (t.status === s ? ' primary' : ''), onClick: () => updateTaskStatus(t.id, s) }, s))
+    ),
+    el('div', { class: 'comments' },
+      el('h3', {}, icon('forum', 'sm'), `Notizen (${comments.length})`),
+      ...comments.map(c => el('div', { class: 'comment' },
+        el('div', { class: 'comment-avatar', style: `background:${colorFromName(c.author)}` }, initials(c.author)),
+        el('div', { class: 'comment-body' },
+          el('div', { class: 'comment-meta' }, c.author + ' · ' + new Date(c.created_at).toLocaleString('de-CH', { dateStyle:'short', timeStyle:'short' })),
+          el('div', { class: 'comment-text' }, c.body)
+        )
+      )),
+      el('form', { class: 'comment-form', onSubmit: (e) => { e.preventDefault(); addComment(t.id, e.target); } },
+        el('input', { type: 'text', name: 'body', placeholder: 'Notiz hinzufügen…', required: true }),
+        el('button', { class: 'btn primary', type: 'submit' }, icon('send', 'sm'))
+      )
+    )
+  );
+
+  showModal(t.title, body, {
+    actions: state.isAdmin ? [
+      { label: 'Bearbeiten', ic: 'edit', cls: 'btn', onClick: () => { closeModal(); openTaskEdit(t); } },
+      { label: 'Löschen', ic: 'delete', cls: 'btn danger', onClick: () => deleteTask(t.id) },
+    ] : []
+  }, true);
+}
+
+// ===== ACTIONS =====
+async function toggleTaskDone(t) {
+  await updateTaskStatus(t.id, t.status === 'Erledigt' ? 'Offen' : 'Erledigt');
+}
+
+async function updateTaskStatus(taskId, newStatus) {
+  const t = state.tasks.find(x => x.id === taskId);
+  if (!t || t.status === newStatus) return;
+  const oldStatus = t.status;
+  const actor = state.activeUser || (state.isAdmin ? 'Admin' : 'Gast');
+  const update = { status: newStatus };
+  if (newStatus === 'Erledigt') { update.completed_at = new Date().toISOString(); update.completed_by = actor; }
+  else if (oldStatus === 'Erledigt') { update.completed_at = null; update.completed_by = null; }
+  const { error } = await sb.from('tasks').update(update).eq('id', taskId);
+  if (error) { toast('Fehler: ' + error.message, 'error'); return; }
+  await sb.from('activity_log').insert({ task_id: taskId, actor, action: `Status: ${oldStatus} → ${newStatus}` });
+  Object.assign(t, update);
+  toast(`Status: ${newStatus}`);
+  closeModal();
+  render();
+}
+
+async function addComment(taskId, form) {
+  const body = form.body.value.trim();
+  if (!body) return;
+  const author = state.activeUser || (state.isAdmin ? 'Admin' : 'Gast');
+  const { data, error } = await sb.from('comments').insert({ task_id: taskId, author, body }).select().single();
+  if (error) { toast('Fehler: ' + error.message, 'error'); return; }
+  state.comments.unshift(data);
+  await sb.from('activity_log').insert({ task_id: taskId, actor: author, action: 'Notiz hinzugefügt' });
+  toast('Notiz gespeichert');
+  closeModal();
+  openTaskDetail(taskId);
+}
+
+async function deleteTask(taskId) {
+  if (!confirm('Aufgabe wirklich löschen?')) return;
+  const { error } = await sb.from('tasks').delete().eq('id', taskId);
+  if (error) { toast('Fehler: ' + error.message, 'error'); return; }
+  state.tasks = state.tasks.filter(t => t.id !== taskId);
+  toast('Gelöscht');
+  closeModal();
+  render();
+}
+
+// ===== CONTACT FORM =====
+function openContactEdit(c) {
+  const isNew = !c;
+  const body = el('div', {},
+    el('div', { class: 'form-row' },
+      el('div', { class: 'form-group' },
+        el('label', {}, 'Kontaktperson'),
+        el('input', { id: 'c-name', type: 'text', value: c?.name || '', placeholder: 'Vor- und Nachname' })
+      ),
+      el('div', { class: 'form-group' },
+        el('label', {}, 'Firma'),
+        el('input', { id: 'c-company', type: 'text', value: c?.company || '', placeholder: 'Firmenname', list: 'companies-list' })
+      )
+    ),
+    el('div', { class: 'form-row' },
+      el('div', { class: 'form-group' },
+        el('label', {}, 'Gewerk'),
+        el('input', { id: 'c-trade', type: 'text', value: c?.trade || '', placeholder: 'z.B. Sanitär, Elektro, Bauleitung', list: 'trades-list' })
+      ),
+      el('div', { class: 'form-group' },
+        el('label', {}, 'Funktion / Rolle'),
+        el('input', { id: 'c-role', type: 'text', value: c?.role || '', placeholder: 'z.B. Polier, Geschäftsführer' })
+      )
+    ),
+    el('div', { class: 'form-row' },
+      el('div', { class: 'form-group' },
+        el('label', {}, 'Telefon'),
+        el('input', { id: 'c-phone', type: 'tel', value: c?.phone || '', placeholder: '+41 79 …' })
+      ),
+      el('div', { class: 'form-group' },
+        el('label', {}, 'WhatsApp'),
+        el('input', { id: 'c-whatsapp', type: 'tel', value: c?.whatsapp || '', placeholder: '+41 79 …' })
+      )
+    ),
+    el('div', { class: 'form-group' },
+      el('label', {}, 'E-Mail'),
+      el('input', { id: 'c-email', type: 'email', value: c?.email || '' })
+    ),
+    el('div', { class: 'form-group' },
+      el('label', {}, 'Notizen'),
+      el('textarea', { id: 'c-notes' }, c?.notes || '')
+    )
+  );
+  showModal(isNew ? 'Neuer Kontakt' : 'Kontakt bearbeiten', body, {
+    actions: [
+      { label: 'Speichern', ic: 'save', cls: 'btn primary', onClick: async () => {
+        const name = $('#c-name').value.trim();
+        const company = $('#c-company').value.trim();
+        if (!name && !company) { toast('Kontaktperson oder Firma angeben', 'error'); return; }
+        const payload = {
+          name: name || null,
+          company: company || null,
+          trade: $('#c-trade').value.trim() || null,
+          role: $('#c-role').value.trim() || null,
+          phone: $('#c-phone').value.trim() || null,
+          whatsapp: $('#c-whatsapp').value.trim() || null,
+          email: $('#c-email').value.trim() || null,
+          notes: $('#c-notes').value.trim() || null,
+          category: c?.category || 'Person',
+        };
+        const op = isNew ? sb.from('contacts').insert(payload).select().single()
+                         : sb.from('contacts').update(payload).eq('id', c.id).select().single();
+        const { data, error } = await op;
+        if (error) { toast('Fehler: ' + error.message, 'error'); return; }
+        if (isNew) state.contacts.push(data);
+        else Object.assign(state.contacts.find(x => x.id === c.id), data);
+        await loadAll(); // refresh datalists
+        toast('Gespeichert');
+        closeModal();
+        render();
+      }},
+      ...(!isNew && state.isAdmin ? [{ label: 'Löschen', ic: 'delete', cls: 'btn danger', onClick: async () => {
+        if (!confirm('Kontakt wirklich löschen?')) return;
+        await sb.from('contacts').delete().eq('id', c.id);
+        state.contacts = state.contacts.filter(x => x.id !== c.id);
+        state.contactDetail = null;
+        closeModal();
+        render();
+      }}] : [])
+    ]
+  });
+}
+
+// ===== TASK FORM =====
+function taskForm(t={}) {
+  const dependsOn = (t.depends_on_codes || []).slice();
+  const subIds = ((t.sub_responsible_ids && t.sub_responsible_ids.length)
+    ? t.sub_responsible_ids
+    : (t.sub_responsible_id ? [t.sub_responsible_id] : [])).slice();
+  
+  function depChipList() {
+    return el('div', { class: 'chip-list', id: 'dep-chips' },
+      ...dependsOn.map(code => {
+        const dep = state.tasks.find(x => x.code === code);
+        return el('span', { class: 'input-chip' },
+          dep ? dep.title : ('Code #' + code),
+          el('span', { class: 'input-chip-x', onClick: () => {
+            const idx = dependsOn.indexOf(code);
+            if (idx >= 0) { dependsOn.splice(idx, 1); refreshDepChips(); }
+          }}, '✕')
+        );
+      })
+    );
+  }
+  function refreshDepChips() {
+    const old = $('#dep-chips');
+    if (old) old.replaceWith(depChipList());
+  }
+
+  function subChipList() {
+    return el('div', { class: 'chip-list', id: 'sub-chips' },
+      ...subIds.map(id => {
+        const c = contactById(id);
+        if (!c) return null;
+        return el('span', { class: 'input-chip' },
+          (c.trade || contactPrimary(c)),
+          el('span', { class: 'input-chip-x', onClick: () => {
+            const idx = subIds.indexOf(id);
+            if (idx >= 0) { subIds.splice(idx, 1); refreshSubChips(); }
+          }}, '✕')
+        );
+      })
+    );
+  }
+  function refreshSubChips() {
+    const old = $('#sub-chips');
+    if (old) old.replaceWith(subChipList());
+  }
+  
+  return el('div', {},
+    el('div', { class: 'form-group' },
+      el('label', {}, 'Titel'),
+      el('input', { id: 't-title', type: 'text', value: t.title || '' })
+    ),
+    el('div', { class: 'form-row' },
+      el('div', { class: 'form-group' },
+        el('label', {}, 'Bereich'),
+        el('input', { id: 't-area', type: 'text', value: t.area || '' })
+      ),
+      el('div', { class: 'form-group' },
+        el('label', {}, 'Status'),
+        el('select', { id: 't-status' }, ...STATUS_LIST.map(s => el('option', { value: s, selected: (t.status || 'Offen') === s }, s)))
+      )
+    ),
+    el('div', { class: 'form-group' },
+      el('label', {}, 'Stockwerke'),
+      el('div', { class: 'floor-chips' },
+        ...FLOORS.map(f => el('button', {
+          type: 'button', class: 'floor-chip' + ((t.floors||[]).includes(f) ? ' active' : ''),
+          'data-floor': f, onClick: (e) => e.target.classList.toggle('active')
+        }, f))
+      )
+    ),
+    el('div', { class: 'form-group' },
+      el('label', {}, 'Verantwortlich (eine Hauptstelle)'),
+      el('select', { id: 't-resp' },
+        el('option', { value: '' }, '—'),
+        ...state.contacts.map(c => el('option', { value: c.id, selected: t.responsible_id === c.id },
+          contactPrimary(c) + (c.trade ? ' (' + c.trade + ')' : '')))
+      )
+    ),
+    el('div', { class: 'form-group' },
+      el('label', {}, 'Ausführung / Gewerke (mehrere möglich)'),
+      subChipList(),
+      el('div', { class: 'flex gap-2 mt-2' },
+        el('select', { id: 't-sub-select', style: 'flex:1' },
+          el('option', { value: '' }, '— Gewerk / Kontakt auswählen —'),
+          ...state.contacts.filter(c => c.trade).map(c => el('option', { value: c.id },
+            contactPrimary(c) + (c.trade ? ' (' + c.trade + ')' : '')))
+        ),
+        el('button', { type: 'button', class: 'btn small', onClick: () => {
+          const sel = $('#t-sub-select');
+          const id = sel.value;
+          if (id && !subIds.includes(id)) {
+            subIds.push(id);
+            refreshSubChips();
+            sel.value = '';
+          }
+        }}, icon('add', 'sm'), 'Hinzufügen')
+      )
+    ),
+    el('div', { class: 'form-group' },
+      el('label', {}, 'Abhängig von (Aufgaben die zuerst erledigt sein müssen)'),
+      depChipList(),
+      el('div', { class: 'flex gap-2 mt-2' },
+        el('select', { id: 't-dep-select', style: 'flex:1' },
+          el('option', { value: '' }, '— Aufgabe auswählen —'),
+          ...state.tasks.filter(x => x.id !== t.id).map(x => el('option', { value: x.code }, x.title))
+        ),
+        el('button', { type: 'button', class: 'btn small', onClick: () => {
+          const sel = $('#t-dep-select');
+          const code = parseInt(sel.value);
+          if (code && !dependsOn.includes(code)) {
+            dependsOn.push(code);
+            refreshDepChips();
+            sel.value = '';
+          }
+        }}, icon('add', 'sm'), 'Hinzufügen')
+      )
+    ),
+    el('div', { class: 'form-row' },
+      el('div', { class: 'form-group' },
+        el('label', {}, 'Aufwand (h)'),
+        el('input', { id: 't-eff', type: 'number', step: '0.5', value: t.effort_hours || '' })
+      ),
+      el('div', { class: 'form-group' },
+        el('label', {}, 'Lieferfrist'),
+        el('input', { id: 't-end', type: 'date', value: t.planned_end || '' })
+      )
+    ),
+    el('div', { class: 'form-group' },
+      el('label', {}, 'Risiko (0–3)'),
+      el('input', { id: 't-risk', type: 'number', min: '0', max: '3', value: t.risk ?? '' })
+    ),
+    el('div', { class: 'form-group' },
+      el('label', {}, 'Notizen'),
+      el('textarea', { id: 't-notes' }, t.notes || '')
+    ),
+    (function () {
+      setTimeout(() => {
+        window.__currentDeps = dependsOn;
+        window.__currentSubs = subIds;
+      }, 0);
+      return null;
+    })()
+  );
+}
+
+function readTaskForm() {
+  const floors = $$('.floor-chip.active', $('.modal-body')).map(b => b.dataset.floor);
+  const deps = window.__currentDeps || [];
+  const subs = window.__currentSubs || [];
+  return {
+    title: $('#t-title').value.trim(),
+    area: $('#t-area').value.trim() || null,
+    status: $('#t-status').value,
+    floors,
+    responsible_id: $('#t-resp').value || null,
+    sub_responsible_ids: subs,
+    sub_responsible_id: subs[0] || null,  // backward-compat
+    depends_on_codes: deps,
+    predecessor_code: deps[0] || null,    // backward-compat
+    effort_hours: $('#t-eff').value ? parseFloat($('#t-eff').value) : null,
+    planned_end: $('#t-end').value || null,
+    risk: $('#t-risk').value !== '' ? parseInt($('#t-risk').value) : null,
+    notes: $('#t-notes').value.trim() || null,
+  };
+}
+
+function openTaskEdit(t) {
+  showModal('Aufgabe bearbeiten', taskForm(t), {
+    actions: [
+      { label: 'Speichern', ic: 'save', cls: 'btn primary', onClick: async () => {
+        const payload = readTaskForm();
+        const { data, error } = await sb.from('tasks').update(payload).eq('id', t.id).select().single();
+        if (error) { toast('Fehler: ' + error.message, 'error'); return; }
+        Object.assign(state.tasks.find(x => x.id === t.id), data);
+        await sb.from('activity_log').insert({ task_id: t.id, actor: 'Admin', action: 'Aufgabe bearbeitet' });
+        toast('Gespeichert');
+        closeModal();
+        render();
+      }}
+    ]
+  }, true);
+}
+
+function openTaskNew() {
+  const nextCode = Math.max(0, ...state.tasks.map(t => t.code)) + 1;
+  showModal('Neue Aufgabe', taskForm({}), {
+    actions: [
+      { label: 'Erstellen', ic: 'add', cls: 'btn primary', onClick: async () => {
+        const payload = readTaskForm();
+        if (!payload.title) { toast('Titel fehlt', 'error'); return; }
+        payload.code = nextCode;
+        const { data, error } = await sb.from('tasks').insert(payload).select().single();
+        if (error) { toast('Fehler: ' + error.message, 'error'); return; }
+        state.tasks.push(data);
+        await sb.from('activity_log').insert({ task_id: data.id, actor: 'Admin', action: 'Aufgabe erstellt' });
+        toast('Erstellt');
+        closeModal();
+        render();
+      }}
+    ]
+  }, true);
+}
+
+// ===== CSV =====
+function exportCSV() {
+  const rows = [['Titel','Bereich','Stockwerke','Gewerk(e)','Verantwortlich','Firma','Abhängig von','Aufwand h','Lieferfrist','Risiko','Status','Notizen']];
+  state.tasks.forEach(t => {
+    const r = contactById(t.responsible_id);
+    const subs = subContacts(t);
+    const trades = [...new Set(subs.map(s => s.trade).filter(Boolean))].join(', ');
+    rows.push([
+      t.title, t.area || '', (t.floors||[]).join('; '),
+      trades || r?.trade || '',
+      contactPrimary(r||{}) || '', r?.company || '',
+      (t.depends_on_codes||[]).map(c => '#'+c).join('; '),
+      t.effort_hours || '', t.planned_end || '', t.risk ?? '',
+      t.status, (t.notes || '').replace(/\n/g,' ')
+    ]);
+  });
+  const bom = '\uFEFF';
+  const csv = bom + rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(';')).join('\r\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `oda-aufgaben-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('CSV exportiert');
+}
+
+// ===== MODAL =====
+function showModal(title, body, opts={}, wide=false) {
+  closeModal();
+  const overlay = el('div', { class: 'modal-overlay', id: 'modal-overlay', onClick: (e) => { if (e.target === overlay) closeModal(); } });
+  const modal = el('div', { class: 'modal' + (wide ? ' wide' : '') },
+    el('div', { class: 'modal-header' },
+      el('h2', {}, title),
+      el('button', { class: 'btn icon-only', onClick: closeModal }, icon('close'))
+    ),
+    el('div', { class: 'modal-body' }, body),
+    opts.actions?.length ? el('div', { class: 'modal-footer' },
+      ...opts.actions.map(a => el('button', { class: a.cls, onClick: a.onClick }, a.ic ? icon(a.ic, 'sm') : null, a.label))
+    ) : null
+  );
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+}
+function closeModal() { const o = $('#modal-overlay'); if (o) o.remove(); }
+
+// ===== LOGIN =====
+function openLogin() {
+  const body = el('div', {},
+    el('p', { class: 'text-muted text-sm mb-2' }, 'Wähle deinen Namen aus, um Aufgaben abzuhaken und Notizen zu schreiben. Admin-Code für Bearbeitungsrechte.'),
+    el('div', { class: 'form-group' },
+      el('label', {}, 'Wer bist du?'),
+      el('select', { id: 'login-user' },
+        el('option', { value: '' }, '— bitte wählen —'),
+        ...state.contacts.map(c => {
+          const lbl = contactPrimary(c) + (c.trade ? ' (' + c.trade + ')' : '');
+          return el('option', { value: lbl, selected: state.activeUser === lbl }, lbl);
+        })
+      )
+    ),
+    el('div', { class: 'form-group' },
+      el('label', {}, 'Admin-Code (optional)'),
+      el('input', { id: 'login-code', type: 'password', placeholder: 'Für Bearbeitungsrechte' })
+    ),
+    state.isAdmin ? el('div', { style: 'padding: 10px 14px; background: var(--sys-success); color: white; border-radius: var(--radius-md); display: flex; align-items: center; gap: 8px; font-size: 14px' }, icon('verified_user', 'sm'), 'Du bist als Admin eingeloggt') : null
+  );
+  showModal('Login', body, {
+    actions: [
+      ...(state.isAdmin ? [{ label: 'Admin-Logout', ic: 'logout', cls: 'btn', onClick: () => {
+        state.isAdmin = false;
+        localStorage.removeItem('oda-admin');
+        toast('Admin abgemeldet');
+        closeModal(); render();
+      }}] : []),
+      { label: 'Bestätigen', ic: 'check', cls: 'btn primary', onClick: () => {
+        const user = $('#login-user').value;
+        const code = $('#login-code').value;
+        if (user) { state.activeUser = user; localStorage.setItem('oda-user', user); }
+        if (code) {
+          if (code === ADMIN_CODE) {
+            state.isAdmin = true;
+            localStorage.setItem('oda-admin', '1');
+            toast('Admin aktiviert');
+          } else { toast('Falscher Admin-Code', 'error'); return; }
+        }
+        closeModal(); render();
+      }}
+    ]
+  });
+}
+
+function toggleTheme() {
+  const isDark = document.documentElement.classList.toggle('dark');
+  document.body.classList.toggle('dark', isDark);
+  localStorage.setItem('oda-theme', isDark ? 'dark' : 'light');
+  updateHeader();
+}
+
+function render() {
+  updateHeader();
+  $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.view === state.currentView));
+  if (state.currentView !== 'contacts') state.contactDetail = null;
+  switch (state.currentView) {
+    case 'dashboard': renderDashboard(); break;
+    case 'tasks': renderTasks(); break;
+    case 'kanban': renderKanban(); break;
+    case 'floors': renderFloors(); break;
+    case 'trades': renderTrades(); break;
+    case 'contacts': renderContacts(); break;
+    case 'timeline': renderTimeline(); break;
+    case 'activity': renderActivity(); break;
+  }
+  const existingFab = $('#fab');
+  if (existingFab) existingFab.remove();
+  if (state.isAdmin && ['dashboard','tasks','kanban','floors','trades','timeline'].includes(state.currentView)) {
+    const fab = el('button', { class: 'fab', id: 'fab', title: 'Neue Aufgabe', onClick: openTaskNew }, icon('add'));
+    document.body.appendChild(fab);
+  }
+}
+
+async function init() {
+  if (localStorage.getItem('oda-admin') === '1') state.isAdmin = true;
+  const savedUser = localStorage.getItem('oda-user');
+  if (savedUser) state.activeUser = savedUser;
+  if (localStorage.getItem('oda-theme') === 'dark') {
+    document.documentElement.classList.add('dark');
+    document.body.classList.add('dark');
+  }
+  $$('.tab').forEach(t => t.addEventListener('click', () => {
+    state.currentView = t.dataset.view;
+    render();
+  }));
+  $('#login-btn').addEventListener('click', openLogin);
+  $('#theme-btn').addEventListener('click', toggleTheme);
+
+  try {
+    await loadAll();
+    render();
+  } catch (err) {
+    $('#main').innerHTML = `<div class="empty-state"><h3>Fehler beim Laden</h3><pre>${escape(err.message)}</pre></div>`;
+    console.error(err);
+  }
+  if (!state.activeUser && !state.isAdmin) setTimeout(openLogin, 600);
+}
+
+init();
+</script>
+</body>
+</html>
