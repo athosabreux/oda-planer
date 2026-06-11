@@ -199,12 +199,90 @@ a { color: inherit; text-decoration: none; }
 .tab .material-symbols-rounded { font-size: 18px; }
 
 .main { flex: 1; padding: 28px 24px 100px; max-width: 1600px; margin: 0 auto; width: 100%; }
+/* Admin-Modus visuell hervorheben */
+body.is-admin .topbar {
+  background: linear-gradient(180deg, rgba(81, 8, 13, 0.04), var(--bg-elev));
+  border-bottom: 2px solid var(--brand);
+}
+body.is-admin .topbar::before {
+  content: 'ADMIN';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--brand);
+  font-size: 0;
+}
+body.is-admin .topbar-brand .brand-mark::after {
+  content: ' · ADMIN';
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--brand);
+  letter-spacing: 0.08em;
+  margin-left: 4px;
+}
+.topbar { position: relative; }
+
+.login-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 4px 12px 4px 4px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elev);
+  font-size: 13px; font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.login-pill:hover { background: var(--hover); border-color: var(--fg-muted); }
+.login-pill .login-pill-avatar {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-fg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+  flex-shrink: 0;
+}
+.login-pill .material-symbols-rounded {
+  font-size: 14px; color: var(--fg-muted);
+}
+body.is-admin .login-pill {
+  background: var(--brand);
+  color: white;
+  border-color: var(--brand);
+}
+body.is-admin .login-pill .login-pill-avatar {
+  background: white;
+  color: var(--brand);
+}
+body.is-admin .login-pill .material-symbols-rounded { color: white; }
+
+/* Floating Theme Toggle - nur auf mobile */
+.theme-fab {
+  display: none;
+  position: fixed;
+  bottom: 24px; left: 24px;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--bg-elev);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-md);
+  align-items: center; justify-content: center;
+  z-index: 40;
+}
+.theme-fab .material-symbols-rounded { font-size: 22px; }
+
 @media (max-width: 768px) {
-  .topbar { padding: 12px 16px; gap: 10px; }
+  .topbar { padding: 10px 14px; gap: 8px; }
   .topbar-brand small { display: none; }
+  .topbar-brand .brand-mark { font-size: 16px; }
+  body.is-admin .topbar-brand .brand-mark::after { font-size: 9px; }
+  #theme-btn { display: none !important; }
+  .theme-fab { display: flex; }
   .tabs { padding: 4px 12px 0; }
   .tab { padding: 12px 10px; }
   .main { padding: 16px 12px 100px; }
+  .login-pill { padding: 4px 10px 4px 4px; font-size: 13px; }
 }
 
 .modal-overlay {
@@ -357,6 +435,19 @@ a { color: inherit; text-decoration: none; }
   background: var(--bg-subtle);
   position: sticky; top: 0; z-index: 1;
 }
+.task-table th[style*="cursor:pointer"]:hover { color: var(--fg); background: var(--hover); }
+.task-table th .material-symbols-rounded { font-size: 14px; opacity: 0.6; }
+.task-table th[style*="cursor:pointer"]:hover .material-symbols-rounded { opacity: 1; }
+/* Aktive Sortierung: voll dunkel */
+.task-table th.sort-active { color: var(--fg) !important; }
+.task-table th.sort-active .material-symbols-rounded { opacity: 1 !important; }
+.task-table th.col-dragging { opacity: 0.3; }
+.task-table th.col-drop-target { 
+  background: var(--accent) !important; 
+  color: var(--accent-fg) !important; 
+  box-shadow: inset -2px 0 0 var(--accent-fg);
+}
+.task-table th.col-drop-target .material-symbols-rounded { color: var(--accent-fg); opacity: 1 !important; }
 .task-table tr { transition: background 0.15s ease; }
 .task-table tbody tr:hover { background: var(--hover); cursor: pointer; }
 .task-table tr.done { opacity: 0.5; }
@@ -431,10 +522,19 @@ a { color: inherit; text-decoration: none; }
 .kanban-card {
   background: var(--bg); border: 1px solid var(--border);
   border-radius: var(--radius-md); padding: 12px;
-  margin-bottom: 8px; cursor: pointer;
+  margin-bottom: 8px; cursor: grab;
   transition: all 0.15s ease;
+  user-select: none;
 }
 .kanban-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); border-color: var(--border-strong); }
+.kanban-card:active { cursor: grabbing; }
+.kanban-card.dragging { opacity: 0.4; transform: rotate(2deg); }
+.kanban-col.drag-over {
+  background: var(--hover);
+  border-color: var(--accent);
+  border-style: dashed;
+}
+.kanban-col-body { min-height: 60px; }
 .kanban-card-meta { display: flex; flex-wrap: wrap; gap: 5px; font-size: 11px; margin-bottom: 6px; }
 .kanban-card-title { font-size: 13px; font-weight: 500; margin-bottom: 8px; line-height: 1.35; }
 .kanban-card-foot { display: flex; flex-wrap: wrap; gap: 5px; }
@@ -505,6 +605,72 @@ a { color: inherit; text-decoration: none; }
 .comment-form { display: flex; gap: 8px; margin-top: 12px; }
 .comment-form input { flex: 1; padding: 9px 12px; border-radius: var(--radius-md); border: 1px solid var(--border-strong); background: var(--bg); }
 
+/* Trade Stat Cards (Übersicht aller Gewerke) */
+.trade-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+}
+.trade-stat-card {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-left-width: 3px;
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex; flex-direction: column;
+  gap: 12px;
+}
+.trade-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.trade-stat-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+}
+.trade-stat-name {
+  font-size: 16px; font-weight: 600; letter-spacing: -0.01em;
+}
+.trade-stat-pct {
+  font-size: 22px; font-weight: 600; color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+.trade-stat-grid-inner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  gap: 8px;
+}
+.trade-stat-cell {
+  text-align: center; padding: 8px 4px;
+  background: var(--bg-subtle); border-radius: var(--radius-md);
+}
+.trade-stat-cell-value {
+  font-size: 20px; font-weight: 600;
+  font-variant-numeric: tabular-nums; line-height: 1.1;
+}
+.trade-stat-cell-label {
+  font-size: 10px; color: var(--fg-muted);
+  margin-top: 4px; text-transform: uppercase; letter-spacing: 0.04em;
+}
+.trade-stat-hours {
+  padding: 10px 12px; background: var(--bg-subtle);
+  border-radius: var(--radius-md);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.trade-stat-hours-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-variant-numeric: tabular-nums; font-size: 13px;
+}
+.trade-stat-foot {
+  font-size: 12px; color: var(--fg-muted);
+  padding-top: 8px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 4px;
+}
+.trade-stat-foot .material-symbols-rounded { font-size: 14px; }
+
+.trade-detail-hero { margin-bottom: 24px; }
+
 /* Pill tabs */
 .pill-tabs { display: flex; gap: 6px; margin-bottom: 20px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
 .pill-tabs::-webkit-scrollbar { display: none; }
@@ -563,20 +729,25 @@ a { color: inherit; text-decoration: none; }
     <div class="topbar-spacer"></div>
     <div class="topbar-actions">
       <span id="countdown-badge" class="badge"></span>
-      <button id="login-btn" class="btn small" title="Login">
-        <span class="material-symbols-rounded sm">login</span>
+      <button id="login-btn" class="login-pill" title="Login / Benutzer wechseln">
+        <span class="login-pill-avatar" id="login-avatar">?</span>
         <span id="login-label">Login</span>
+        <span class="material-symbols-rounded">swap_horiz</span>
       </button>
       <button id="theme-btn" class="btn icon-only" title="Theme wechseln">
         <span class="material-symbols-rounded">dark_mode</span>
       </button>
     </div>
   </header>
+  
+  <button id="theme-fab" class="theme-fab" title="Theme wechseln">
+    <span class="material-symbols-rounded">dark_mode</span>
+  </button>
 
   <nav class="tabs" id="tabs">
     <button class="tab active" data-view="dashboard"><span class="material-symbols-rounded">dashboard</span>Dashboard</button>
     <button class="tab" data-view="tasks"><span class="material-symbols-rounded">checklist</span>Aufgaben</button>
-    <button class="tab" data-view="kanban"><span class="material-symbols-rounded">view_kanban</span>Kanban</button>
+    <button class="tab" data-view="kanban"><span class="material-symbols-rounded">view_kanban</span>Board</button>
     <button class="tab" data-view="floors"><span class="material-symbols-rounded">apartment</span>Stockwerke</button>
     <button class="tab" data-view="trades"><span class="material-symbols-rounded">construction</span>Gewerke</button>
     <button class="tab" data-view="contacts"><span class="material-symbols-rounded">groups</span>Kontakte</button>
@@ -609,9 +780,43 @@ const state = {
   currentFloor: 'all',
   currentTrade: null,
   contactDetail: null,
-  isAdmin: false, activeUser: null,
+  isAdmin: false,
+  activeUser: null,
+  activeUserId: null,
   taskFilter: { q: '', status: '', floor: '', responsible: '' },
+  taskSort: { col: null, dir: 'asc' },
+  columnOrder: null,
+  contactQuery: '',
+  contactSort: 'trade',
 };
+
+// localStorage Persistence
+function saveState() {
+  try {
+    localStorage.setItem('oda-task-filter', JSON.stringify(state.taskFilter));
+    localStorage.setItem('oda-task-sort', JSON.stringify(state.taskSort));
+    localStorage.setItem('oda-contact-sort', state.contactSort);
+    localStorage.setItem('oda-current-view', state.currentView);
+    localStorage.setItem('oda-current-floor', state.currentFloor);
+    if (state.columnOrder) localStorage.setItem('oda-column-order', JSON.stringify(state.columnOrder));
+  } catch(e) {}
+}
+function loadState() {
+  try {
+    const f = JSON.parse(localStorage.getItem('oda-task-filter') || 'null');
+    if (f) Object.assign(state.taskFilter, f);
+    const s = JSON.parse(localStorage.getItem('oda-task-sort') || 'null');
+    if (s) Object.assign(state.taskSort, s);
+    const cs = localStorage.getItem('oda-contact-sort');
+    if (cs) state.contactSort = cs;
+    const cv = localStorage.getItem('oda-current-view');
+    if (cv) state.currentView = cv;
+    const cf = localStorage.getItem('oda-current-floor');
+    if (cf) state.currentFloor = cf;
+    const co = JSON.parse(localStorage.getItem('oda-column-order') || 'null');
+    if (co && Array.isArray(co)) state.columnOrder = co;
+  } catch(e) {}
+}
 
 const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
@@ -726,31 +931,160 @@ function computeProjectEnd() {
   return new Date(Math.max(...dates));
 }
 
+function firstName(displayName) {
+  if (!displayName) return '';
+  // strip "(Trade)" suffix
+  let s = displayName.replace(/\s*\(.*?\)\s*$/, '').trim();
+  // take first word (first name)
+  return s.split(/\s+/)[0] || s;
+}
+
 function updateHeader() {
   const end = computeProjectEnd();
   const badge = $('#countdown-badge');
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
   badge.innerHTML = '';
   if (!end) {
-    badge.appendChild(icon('event_busy', 'sm'));
-    badge.appendChild(document.createTextNode(' Kein Zieldatum'));
+    badge.appendChild(icon(isMobile ? 'event_busy' : 'event_busy', 'sm'));
+    if (!isMobile) badge.appendChild(document.createTextNode(' Kein Zieldatum'));
     badge.className = 'badge';
   } else {
     const days = daysUntil(end);
     badge.appendChild(icon(days < 0 ? 'priority_high' : 'event', 'sm'));
-    badge.appendChild(document.createTextNode(days >= 0 ? ` Noch ${days} Tage` : ` ${Math.abs(days)} Tage überfällig`));
+    if (isMobile) {
+      // Kompakt: "39T" oder "-3T"
+      badge.appendChild(document.createTextNode(' ' + (days >= 0 ? days + 'T' : days + 'T')));
+    } else {
+      badge.appendChild(document.createTextNode(days >= 0 ? ` Noch ${days} Tage` : ` ${Math.abs(days)} Tage überfällig`));
+    }
     badge.className = 'badge ' + (days < 7 ? 'danger' : days < 30 ? 'warn' : 'ok');
   }
-  $('#login-label').textContent = state.isAdmin ? 'Admin' : (state.activeUser || 'Login');
+  
+  // Login Pill: Avatar + Vorname + Swap-Icon
+  const loginLabel = $('#login-label');
+  const loginAvatar = $('#login-avatar');
+  if (state.activeUserId) {
+    const me = contactById(state.activeUserId);
+    const display = me ? contactPrimary(me) : state.activeUser;
+    loginLabel.textContent = firstName(display);
+    loginAvatar.textContent = me ? initials(me.name, me.company) : '?';
+    if (me) loginAvatar.style.background = me.color || colorFromName(contactPrimary(me));
+  } else {
+    loginLabel.textContent = 'Login';
+    loginAvatar.textContent = '?';
+    loginAvatar.style.background = '';
+  }
+  
+  // Theme-Icons synchronisieren (Desktop + Mobile)
+  const isDark = document.documentElement.classList.contains('dark');
+  const themeIcon = isDark ? 'light_mode' : 'dark_mode';
   const themeBtn = $('#theme-btn .material-symbols-rounded');
-  if (themeBtn) themeBtn.textContent = document.documentElement.classList.contains('dark') ? 'light_mode' : 'dark_mode';
+  if (themeBtn) themeBtn.textContent = themeIcon;
+  const themeFab = $('#theme-fab .material-symbols-rounded');
+  if (themeFab) themeFab.textContent = themeIcon;
+  
+  // Admin-Body-Klasse
+  document.body.classList.toggle('is-admin', !!state.isAdmin);
 }
 
 // ===== DASHBOARD =====
+// Helper: Navigation zu Tasks mit Filter
+function gotoTasksWithFilter(filterPatch) {
+  Object.assign(state.taskFilter, { q: '', status: '', floor: '', responsible: '' }, filterPatch);
+  state.currentView = 'tasks';
+  saveState();
+  render();
+}
+
 function renderDashboard() {
+  const main = $('#main');
+  main.innerHTML = '';
+
+  // Personalisierte Sektion wenn eingeloggt
+  if (state.activeUserId) {
+    const me = contactById(state.activeUserId);
+    if (me) {
+      const myTasks = tasksForContact(me.id);
+      const myOpen = myTasks.filter(t => t.status !== 'Erledigt');
+      const myInProgress = myTasks.filter(t => t.status === 'In Arbeit');
+      const myBlocked = myTasks.filter(t => t.status !== 'Erledigt' && (isTaskBlocked(t) || t.status === 'Blockiert'));
+      const myDone = myTasks.filter(t => t.status === 'Erledigt');
+      const myUpcoming = myOpen.filter(t => t.planned_end).sort((a,b) => new Date(a.planned_end) - new Date(b.planned_end)).slice(0, 5);
+      const color = me.color || colorFromName(contactPrimary(me));
+      
+      const meCard = el('div', { class: 'kpi-card', style: 'display:flex; align-items:center; gap:18px; flex-wrap:wrap; margin-bottom: 16px' },
+        el('div', { class: 'contact-card-avatar', style: `background:${color}; width:54px; height:54px; font-size:18px` }, initials(me.name, me.company)),
+        el('div', { style: 'flex:1; min-width: 200px' },
+          el('div', { style: 'font-size: 13px; color: var(--fg-muted)' }, 'Eingeloggt als'),
+          el('div', { style: 'font-size: 20px; font-weight: 600' }, contactPrimary(me)),
+          me.company && me.name ? el('div', { class: 'text-muted text-sm' }, me.company + (me.trade ? ' · ' + me.trade : '')) : (me.trade ? el('div', { class: 'text-muted text-sm' }, me.trade) : null)
+        ),
+        el('div', { style: 'font-size: 32px; font-weight: 600; letter-spacing: -0.02em' }, myOpen.length),
+        el('div', { class: 'text-muted text-sm' }, 'offene Aufgaben')
+      );
+      
+      const myKpis = el('div', { class: 'kpi-grid' },
+        el('div', { class: 'kpi-card', style: 'cursor:pointer', onClick: () => gotoTasksWithFilter({ responsible: me.id, status: 'In Arbeit' }) },
+          el('div', { class: 'kpi-label' }, icon('pending_actions', 'sm'), 'In Arbeit'),
+          el('div', { class: 'kpi-value' }, myInProgress.length),
+          el('div', { class: 'kpi-detail' }, 'meine aktiven Aufgaben')
+        ),
+        el('div', { class: 'kpi-card' + (myBlocked.length ? ' danger' : ''), style: 'cursor:pointer', onClick: () => gotoTasksWithFilter({ responsible: me.id, status: 'Blockiert' }) },
+          el('div', { class: 'kpi-label' }, icon('block', 'sm'), 'Blockiert / Wartet'),
+          el('div', { class: 'kpi-value' }, myBlocked.length),
+          el('div', { class: 'kpi-detail' }, 'meine wartenden')
+        ),
+        el('div', { class: 'kpi-card', style: 'cursor:pointer', onClick: () => gotoTasksWithFilter({ responsible: me.id, status: 'Offen' }) },
+          el('div', { class: 'kpi-label' }, icon('radio_button_unchecked', 'sm'), 'Offen'),
+          el('div', { class: 'kpi-value' }, myOpen.length - myInProgress.length - myBlocked.length),
+          el('div', { class: 'kpi-detail' }, 'noch nicht angefangen')
+        ),
+        el('div', { class: 'kpi-card', style: 'cursor:pointer', onClick: () => gotoTasksWithFilter({ responsible: me.id, status: 'Erledigt' }) },
+          el('div', { class: 'kpi-label' }, icon('check_circle', 'sm'), 'Erledigt'),
+          el('div', { class: 'kpi-value' }, myDone.length),
+          el('div', { class: 'kpi-detail' }, 'meine abgeschlossenen')
+        )
+      );
+      
+      main.appendChild(el('div', { class: 'section' },
+        el('div', { class: 'section-head' }, el('h2', {}, icon('person'), 'Meine Übersicht')),
+        meCard,
+        myKpis
+      ));
+      
+      // Meine offenen Aufgaben Tabelle
+      if (myOpen.length) {
+        main.appendChild(
+          el('div', { class: 'section' },
+            el('div', { class: 'section-head' },
+              el('h2', {}, icon('assignment'), `Meine offenen Aufgaben (${myOpen.length})`),
+              el('button', { class: 'btn small', onClick: () => gotoTasksWithFilter({ responsible: me.id }) },
+                'Alle meine ansehen', icon('arrow_forward', 'sm')
+              )
+            ),
+            el('div', { class: 'task-table-wrap' }, el('div', { class: 'task-table-scroll' }, buildTaskTable(sortTasks(myOpen))))
+          )
+        );
+      }
+
+      // Nächste Termine
+      if (myUpcoming.length) {
+        main.appendChild(
+          el('div', { class: 'section' },
+            el('div', { class: 'section-head' }, el('h2', {}, icon('event'), 'Meine nächsten Termine')),
+            el('div', { class: 'task-table-wrap' }, el('div', { class: 'task-table-scroll' }, buildTaskTable(myUpcoming)))
+          )
+        );
+      }
+    }
+  }
+
+  // Globale Übersicht
   const t = state.tasks;
   const done = t.filter(x => x.status === 'Erledigt').length;
   const inProgress = t.filter(x => x.status === 'In Arbeit').length;
-  const blocked = t.filter(x => x.status === 'Blockiert' || (isTaskBlocked(x) && x.status !== 'Erledigt')).length;
+  const blockedTasks = t.filter(x => x.status === 'Blockiert' || (isTaskBlocked(x) && x.status !== 'Erledigt'));
+  const blocked = blockedTasks.length;
   const totalH = t.reduce((s, x) => s + (Number(x.effort_hours) || 0), 0);
   const doneH = t.filter(x => x.status === 'Erledigt').reduce((s, x) => s + (Number(x.effort_hours) || 0), 0);
   const pct = t.length ? Math.round((done / t.length) * 100) : 0;
@@ -768,30 +1102,30 @@ function renderDashboard() {
   });
   const tradeList = Object.entries(byTrade).sort((a,b) => b[1]-a[1]);
 
-  const main = $('#main');
-  main.innerHTML = '';
-
-  main.appendChild(el('div', { class: 'kpi-grid' },
-    el('div', { class: 'kpi-card accent' },
-      el('div', { class: 'kpi-label' }, icon('trending_up', 'sm'), 'Fortschritt'),
-      el('div', { class: 'kpi-value' }, pct + '%'),
-      el('div', { class: 'progress-bar' }, el('div', { class: 'progress-bar-fill', style: `width:${pct}%` })),
-      el('div', { class: 'kpi-detail' }, `${done} von ${t.length} Aufgaben erledigt`)
-    ),
-    el('div', { class: 'kpi-card' },
-      el('div', { class: 'kpi-label' }, icon('pending_actions', 'sm'), 'In Arbeit'),
-      el('div', { class: 'kpi-value' }, inProgress),
-      el('div', { class: 'kpi-detail' }, 'aktive Aufgaben')
-    ),
-    el('div', { class: 'kpi-card' + (blocked ? ' danger' : '') },
-      el('div', { class: 'kpi-label' }, icon('block', 'sm'), 'Blockiert'),
-      el('div', { class: 'kpi-value' }, blocked),
-      el('div', { class: 'kpi-detail' }, 'warten auf Vorgänger')
-    ),
-    el('div', { class: 'kpi-card' },
-      el('div', { class: 'kpi-label' }, icon('schedule', 'sm'), 'Aufwand'),
-      el('div', { class: 'kpi-value' }, totalH.toFixed(0) + 'h'),
-      el('div', { class: 'kpi-detail' }, `${doneH.toFixed(0)}h erledigt · ${(totalH-doneH).toFixed(0)}h offen`)
+  main.appendChild(el('div', { class: 'section' },
+    el('div', { class: 'section-head' }, el('h2', {}, icon('dashboard'), 'Gesamtprojekt')),
+    el('div', { class: 'kpi-grid' },
+      el('div', { class: 'kpi-card accent', style: 'cursor:pointer', onClick: () => gotoTasksWithFilter({}) },
+        el('div', { class: 'kpi-label' }, icon('trending_up', 'sm'), 'Fortschritt'),
+        el('div', { class: 'kpi-value' }, pct + '%'),
+        el('div', { class: 'progress-bar' }, el('div', { class: 'progress-bar-fill', style: `width:${pct}%` })),
+        el('div', { class: 'kpi-detail' }, `${done} von ${t.length} Aufgaben erledigt`)
+      ),
+      el('div', { class: 'kpi-card', style: 'cursor:pointer', onClick: () => gotoTasksWithFilter({ status: 'In Arbeit' }) },
+        el('div', { class: 'kpi-label' }, icon('pending_actions', 'sm'), 'In Arbeit'),
+        el('div', { class: 'kpi-value' }, inProgress),
+        el('div', { class: 'kpi-detail' }, 'aktive Aufgaben')
+      ),
+      el('div', { class: 'kpi-card' + (blocked ? ' danger' : ''), style: 'cursor:pointer', onClick: () => gotoTasksWithFilter({ status: 'Blockiert' }) },
+        el('div', { class: 'kpi-label' }, icon('block', 'sm'), 'Blockiert'),
+        el('div', { class: 'kpi-value' }, blocked),
+        el('div', { class: 'kpi-detail' }, 'warten auf Vorgänger')
+      ),
+      el('div', { class: 'kpi-card' },
+        el('div', { class: 'kpi-label' }, icon('schedule', 'sm'), 'Aufwand'),
+        el('div', { class: 'kpi-value' }, totalH.toFixed(0) + 'h'),
+        el('div', { class: 'kpi-detail' }, `${doneH.toFixed(0)}h erledigt · ${(totalH-doneH).toFixed(0)}h offen`)
+      )
     )
   ));
 
@@ -802,8 +1136,9 @@ function renderDashboard() {
         el('div', { class: 'kpi-grid' },
           ...tradeList.slice(0, 8).map(([trade, count]) =>
             el('div', { class: 'kpi-card', style: 'cursor:pointer', onClick: () => {
+              // Find first contact with this trade and filter
               const ct = state.contacts.find(c => c.trade === trade);
-              if (ct) { state.currentView = 'trades'; state.currentTrade = ct.id; render(); }
+              if (ct) gotoTasksWithFilter({ responsible: ct.id });
             }},
               el('div', { class: 'kpi-label' }, trade),
               el('div', { class: 'kpi-value', style: 'font-size: 26px' }, count),
@@ -820,33 +1155,144 @@ function renderDashboard() {
     main.appendChild(
       el('div', { class: 'section' },
         el('div', { class: 'section-head' }, el('h2', {}, icon('warning', 'fill'), 'Kritische Aufgaben')),
-        el('div', { class: 'task-table-wrap' }, el('div', { class: 'task-table-scroll' }, buildTaskTable(critical)))
+        el('div', { class: 'task-table-wrap' }, el('div', { class: 'task-table-scroll' }, buildTaskTable(sortTasks(critical))))
       )
     );
   }
 }
 
 // ===== TASK TABLE =====
-function buildTaskTable(tasks) {
-  const tbl = el('table', { class: 'task-table' });
-  tbl.appendChild(el('thead', {}, el('tr', {},
-    el('th', { style: 'width:46px' }, ''),
-    el('th', {}, 'Aufgabe'),
-    el('th', {}, 'Stockwerk'),
-    el('th', {}, 'Bereich'),
-    el('th', {}, 'Gewerk'),
-    el('th', {}, 'Verantwortlich'),
-    el('th', {}, 'Aufwand'),
-    el('th', {}, 'Frist'),
-    el('th', {}, 'Status')
-  )));
-  const tb = el('tbody');
-  tasks.forEach(t => tb.appendChild(buildTaskRow(t)));
-  tbl.appendChild(tb);
-  return tbl;
+const SORT_KEYS = {
+  'title': t => (t.title || '').toLowerCase(),
+  'floors': t => (t.floors || []).join(','),
+  'area': t => (t.area || '').toLowerCase(),
+  'trade': t => {
+    const subs = subContacts(t);
+    return subs.length ? subs.map(s => s.trade || '').join(',') : (contactById(t.responsible_id)?.trade || '');
+  },
+  'responsible': t => contactPrimary(contactById(t.responsible_id) || {}).toLowerCase(),
+  'effort': t => t.effort_hours || 0,
+  'planned_end': t => t.planned_end ? new Date(t.planned_end).getTime() : Infinity,
+  'status': t => t.status || '',
+};
+
+// Spalten-Definition mit Render-Funktion pro Zelle
+const COLUMN_DEFS = {
+  checkbox:    { label: '', sortable: false, headStyle: 'width:46px', fixed: true },
+  title:       { label: 'Aufgabe', sortable: true, sortKey: 'title' },
+  floors:      { label: 'Stockwerk', sortable: true, sortKey: 'floors' },
+  area:        { label: 'Bereich', sortable: true, sortKey: 'area' },
+  trade:       { label: 'Gewerk', sortable: true, sortKey: 'trade' },
+  responsible: { label: 'Verantwortlich', sortable: true, sortKey: 'responsible' },
+  effort:      { label: 'Aufwand', sortable: true, sortKey: 'effort' },
+  planned_end: { label: 'Frist', sortable: true, sortKey: 'planned_end' },
+  status:      { label: 'Status', sortable: true, sortKey: 'status' },
+};
+
+const DEFAULT_COLUMN_ORDER = ['checkbox','title','floors','area','trade','responsible','effort','planned_end','status'];
+
+function getColumnOrder() {
+  const order = state.columnOrder && state.columnOrder.length ? state.columnOrder : DEFAULT_COLUMN_ORDER;
+  // ensure checkbox always first, ensure all default columns present
+  const filtered = order.filter(k => COLUMN_DEFS[k] && k !== 'checkbox');
+  DEFAULT_COLUMN_ORDER.filter(k => k !== 'checkbox').forEach(k => {
+    if (!filtered.includes(k)) filtered.push(k);
+  });
+  return ['checkbox', ...filtered];
 }
 
-function buildTaskRow(t) {
+function reorderColumn(fromKey, toKey) {
+  if (fromKey === 'checkbox' || toKey === 'checkbox') return; // checkbox is fixed
+  const order = getColumnOrder().slice();
+  const fromIdx = order.indexOf(fromKey);
+  const toIdx = order.indexOf(toKey);
+  if (fromIdx < 0 || toIdx < 0 || fromIdx === toIdx) return;
+  order.splice(fromIdx, 1);
+  order.splice(toIdx, 0, fromKey);
+  state.columnOrder = order;
+  try { localStorage.setItem('oda-column-order', JSON.stringify(order)); } catch(e){}
+  render();
+}
+
+function sortTasks(tasks) {
+  const { col, dir } = state.taskSort;
+  if (!col || !SORT_KEYS[col]) return tasks;
+  const fn = SORT_KEYS[col];
+  return tasks.slice().sort((a, b) => {
+    const av = fn(a), bv = fn(b);
+    let cmp;
+    if (typeof av === 'string' && typeof bv === 'string') cmp = av.localeCompare(bv, 'de');
+    else cmp = av < bv ? -1 : av > bv ? 1 : 0;
+    return dir === 'asc' ? cmp : -cmp;
+  });
+}
+
+function toggleSort(col) {
+  if (state.taskSort.col === col) {
+    if (state.taskSort.dir === 'asc') state.taskSort.dir = 'desc';
+    else { state.taskSort.col = null; state.taskSort.dir = 'asc'; }
+  } else {
+    state.taskSort.col = col;
+    state.taskSort.dir = 'asc';
+  }
+  saveState();
+  render();
+}
+
+function sortIcon(col) {
+  if (state.taskSort.col !== col) return icon('unfold_more', 'sm');
+  return icon(state.taskSort.dir === 'asc' ? 'arrow_upward' : 'arrow_downward', 'sm');
+}
+
+function buildHeaderTh(key) {
+  const def = COLUMN_DEFS[key];
+  if (!def) return null;
+  
+  if (def.fixed) {
+    return el('th', { style: def.headStyle || '', 'data-col': key }, def.label);
+  }
+  
+  const isActive = def.sortable && state.taskSort.col === def.sortKey;
+  const th = el('th', {
+    style: 'cursor:pointer; user-select:none' + (def.headStyle ? '; ' + def.headStyle : ''),
+    class: isActive ? 'sort-active' : '',
+    'data-col': key,
+    draggable: true,
+    onClick: () => def.sortable && toggleSort(def.sortKey),
+    onDragstart: (e) => {
+      e.dataTransfer.setData('text/col', key);
+      e.dataTransfer.effectAllowed = 'move';
+      setTimeout(() => th.classList.add('col-dragging'), 0);
+    },
+    onDragend: () => {
+      th.classList.remove('col-dragging');
+      $$('.col-drop-target').forEach(t => t.classList.remove('col-drop-target'));
+    },
+    onDragover: (e) => {
+      const colKey = e.dataTransfer.types.includes('text/col');
+      if (!colKey) return;
+      e.preventDefault();
+      th.classList.add('col-drop-target');
+    },
+    onDragleave: () => th.classList.remove('col-drop-target'),
+    onDrop: (e) => {
+      e.preventDefault();
+      th.classList.remove('col-drop-target');
+      const draggedKey = e.dataTransfer.getData('text/col');
+      if (draggedKey) reorderColumn(draggedKey, key);
+    },
+    title: def.sortable ? 'Klicken zum Sortieren · Ziehen zum Verschieben' : 'Ziehen zum Verschieben'
+  },
+    el('span', { style: 'display:inline-flex; align-items:center; gap:4px' },
+      def.label,
+      def.sortable ? sortIcon(def.sortKey) : null
+    )
+  );
+  return th;
+}
+
+// Cells für eine Aufgabe – als Map, damit wir je nach Spalten-Reihenfolge anordnen
+function buildCellMap(t) {
   const resp = contactById(t.responsible_id);
   const subs = subContacts(t);
   const tradeNames = [...new Set(subs.map(s => s.trade).filter(Boolean))];
@@ -856,27 +1302,51 @@ function buildTaskRow(t) {
   const effective = blocked ? 'Blockiert' : t.status;
   const deps = dependencies(t);
 
-  return el('tr', { class: isDone ? 'done' : '', onClick: () => openTaskDetail(t.id) },
-    el('td', { onClick: (e) => { e.stopPropagation(); toggleTaskDone(t); }},
+  return {
+    checkbox: el('td', { onClick: (e) => { e.stopPropagation(); toggleTaskDone(t); }},
       el('div', { class: 'task-checkbox' + (isDone ? ' checked' : '') },
         isDone ? icon('check', 'sm') : null
       )
     ),
-    el('td', { class: 'task-title-cell' },
+    title: el('td', { class: 'task-title-cell' },
       el('div', { class: 'task-title' }, t.title),
       deps.length ? el('div', { class: 'task-title-sub' }, icon('arrow_back', 'sm'),
         'Abhängig von ' + deps.map(c => '#' + c).join(', ')) : null
     ),
-    el('td', {}, el('div', { class: 'floor-tags' }, ...(t.floors||[]).map(f => el('span', { class: 'floor-tag' }, f)))),
-    el('td', {}, t.area || '—'),
-    el('td', {}, tradeNames.length
+    floors: el('td', {}, el('div', { class: 'floor-tags' }, ...(t.floors||[]).map(f => el('span', { class: 'floor-tag' }, f)))),
+    area: el('td', {}, t.area || '—'),
+    trade: el('td', {}, tradeNames.length
       ? el('div', { class: 'floor-tags' }, ...tradeNames.map(tr => el('span', { class: 'floor-tag' }, tr)))
       : '—'),
-    el('td', {}, personContact ? buildContactPill(personContact) : (subs[0] ? buildContactPill(subs[0]) : '—')),
-    el('td', {}, t.effort_hours ? t.effort_hours + ' h' : '—'),
-    el('td', {}, fmtDate(t.planned_end)),
-    el('td', {}, el('span', { class: 'status-pill ' + statusClass(effective) }, effective))
-  );
+    responsible: el('td', {}, personContact ? buildContactPill(personContact) : (subs[0] ? buildContactPill(subs[0]) : '—')),
+    effort: el('td', {}, t.effort_hours ? t.effort_hours + ' h' : '—'),
+    planned_end: el('td', {}, fmtDate(t.planned_end)),
+    status: el('td', {}, el('span', { class: 'status-pill ' + statusClass(effective) }, effective))
+  };
+}
+
+function buildTaskRow(t) {
+  const isDone = t.status === 'Erledigt';
+  const cells = buildCellMap(t);
+  const tr = el('tr', { class: isDone ? 'done' : '', onClick: () => openTaskDetail(t.id) });
+  getColumnOrder().forEach(key => {
+    if (cells[key]) tr.appendChild(cells[key]);
+  });
+  return tr;
+}
+
+function buildTaskTable(tasks) {
+  const tbl = el('table', { class: 'task-table' });
+  const headerRow = el('tr', {});
+  getColumnOrder().forEach(key => {
+    const th = buildHeaderTh(key);
+    if (th) headerRow.appendChild(th);
+  });
+  tbl.appendChild(el('thead', {}, headerRow));
+  const tb = el('tbody');
+  tasks.forEach(t => tb.appendChild(buildTaskRow(t)));
+  tbl.appendChild(tb);
+  return tbl;
 }
 
 function buildContactPill(c) {
@@ -893,26 +1363,33 @@ function renderTasks() {
   const main = $('#main');
   main.innerHTML = '';
 
+  const hasActiveFilter = state.taskFilter.q || state.taskFilter.status || state.taskFilter.floor || state.taskFilter.responsible;
+
   const wrap = el('div', { class: 'task-table-wrap' });
   const fb = el('div', { class: 'task-filter-bar' },
     el('div', { class: 'search-input' },
       icon('search', 'sm'),
       el('input', { type: 'search', placeholder: 'Aufgabe oder Bereich suchen…', value: state.taskFilter.q,
-        onInput: (e) => { state.taskFilter.q = e.target.value; refreshTaskTable(); } })
+        onInput: (e) => { state.taskFilter.q = e.target.value; saveState(); refreshTaskTable(); } })
     ),
-    el('select', { onChange: (e) => { state.taskFilter.status = e.target.value; refreshTaskTable(); } },
+    el('select', { onChange: (e) => { state.taskFilter.status = e.target.value; saveState(); refreshTaskTable(); } },
       el('option', { value: '' }, 'Alle Stati'),
       ...STATUS_LIST.map(s => el('option', { value: s, selected: state.taskFilter.status === s }, s))
     ),
-    el('select', { onChange: (e) => { state.taskFilter.floor = e.target.value; refreshTaskTable(); } },
+    el('select', { onChange: (e) => { state.taskFilter.floor = e.target.value; saveState(); refreshTaskTable(); } },
       el('option', { value: '' }, 'Alle Stockwerke'),
       ...FLOORS.map(f => el('option', { value: f, selected: state.taskFilter.floor === f }, f))
     ),
-    el('select', { onChange: (e) => { state.taskFilter.responsible = e.target.value; refreshTaskTable(); } },
+    el('select', { onChange: (e) => { state.taskFilter.responsible = e.target.value; saveState(); refreshTaskTable(); } },
       el('option', { value: '' }, 'Alle Verantwortlichen'),
       ...state.contacts.map(c => el('option', { value: c.id, selected: state.taskFilter.responsible === c.id },
         contactPrimary(c) + (c.trade ? ' (' + c.trade + ')' : '')))
     ),
+    hasActiveFilter ? el('button', { class: 'btn small', onClick: () => {
+      state.taskFilter = { q: '', status: '', floor: '', responsible: '' };
+      saveState();
+      render();
+    }}, icon('filter_alt_off', 'sm'), 'Filter zurücksetzen') : null,
     el('button', { class: 'btn small', onClick: exportCSV }, icon('download', 'sm'), 'CSV')
   );
   wrap.appendChild(fb);
@@ -928,7 +1405,14 @@ function filteredTasks() {
       const q = f.q.toLowerCase();
       if (!t.title.toLowerCase().includes(q) && !(t.area||'').toLowerCase().includes(q)) return false;
     }
-    if (f.status && t.status !== f.status) return false;
+    if (f.status) {
+      if (f.status === 'Blockiert') {
+        const isBlocked = t.status === 'Blockiert' || (isTaskBlocked(t) && t.status !== 'Erledigt');
+        if (!isBlocked) return false;
+      } else {
+        if (t.status !== f.status) return false;
+      }
+    }
     if (f.floor && !(t.floors||[]).includes(f.floor)) return false;
     if (f.responsible && t.responsible_id !== f.responsible && !subContactIds(t).includes(f.responsible)) return false;
     return true;
@@ -939,12 +1423,12 @@ function refreshTaskTable() {
   const scroll = $('#task-scroll');
   if (!scroll) return;
   scroll.innerHTML = '';
-  const tasks = filteredTasks();
+  const tasks = sortTasks(filteredTasks());
   scroll.appendChild(buildTaskTable(tasks));
   if (!tasks.length) scroll.appendChild(el('div', { class: 'empty-state' }, icon('inbox', 'xl'), el('h3', {}, 'Keine Aufgaben')));
 }
 
-// ===== KANBAN =====
+// ===== BOARD (Kanban mit Drag & Drop) =====
 function renderKanban() {
   const main = $('#main');
   main.innerHTML = '';
@@ -956,12 +1440,36 @@ function renderKanban() {
       if (status === 'Offen') return t.status === 'Offen' && !isTaskBlocked(t);
       return t.status === status;
     });
-    const col = el('div', { class: 'kanban-col' },
+    const colBody = el('div', { class: 'kanban-col-body' }, ...tasks.map(t => buildKanbanCard(t)));
+    const col = el('div', { 
+      class: 'kanban-col', 
+      'data-status': status,
+      onDragover: (e) => { e.preventDefault(); col.classList.add('drag-over'); },
+      onDragleave: (e) => { 
+        // Nur entfernen wenn wir wirklich raus aus der col sind
+        if (!col.contains(e.relatedTarget)) col.classList.remove('drag-over');
+      },
+      onDrop: async (e) => {
+        e.preventDefault();
+        col.classList.remove('drag-over');
+        const taskId = e.dataTransfer.getData('text/task-id');
+        const t = state.tasks.find(x => x.id === taskId);
+        if (!t) return;
+        // Bei Blockiert (implizit) → nicht ändern wenn schon implizit blockiert
+        let newStatus = status;
+        if (status === 'Blockiert' && isTaskBlocked(t)) {
+          // ist eh schon implizit blockiert, nichts tun
+          return;
+        }
+        if (t.status === newStatus) return;
+        await updateTaskStatus(t.id, newStatus);
+      }
+    },
       el('div', { class: 'kanban-col-head' },
         el('h3', { class: statusClass(status) }, icon(statusIcons[status], 'sm'), status),
         el('span', { class: 'kanban-col-count' }, tasks.length)
       ),
-      ...tasks.map(t => buildKanbanCard(t))
+      colBody
     );
     wrap.appendChild(col);
   });
@@ -972,7 +1480,21 @@ function buildKanbanCard(t) {
   const resp = contactById(t.responsible_id);
   const subs = subContacts(t);
   const tradeNames = [...new Set(subs.map(s => s.trade).filter(Boolean))];
-  return el('div', { class: 'kanban-card', onClick: () => openTaskDetail(t.id) },
+  const card = el('div', {
+    class: 'kanban-card',
+    draggable: true,
+    'data-task-id': t.id,
+    onClick: () => openTaskDetail(t.id),
+    onDragstart: (e) => {
+      e.dataTransfer.setData('text/task-id', t.id);
+      e.dataTransfer.effectAllowed = 'move';
+      card.classList.add('dragging');
+    },
+    onDragend: () => {
+      card.classList.remove('dragging');
+      $$('.kanban-col.drag-over').forEach(c => c.classList.remove('drag-over'));
+    }
+  },
     el('div', { class: 'kanban-card-meta' },
       ...(t.floors||[]).map(f => el('span', { class: 'floor-tag' }, f)),
       t.area ? el('span', { class: 'floor-tag' }, t.area) : null,
@@ -983,6 +1505,7 @@ function buildKanbanCard(t) {
       resp ? buildContactPill(resp) : (subs[0] ? buildContactPill(subs[0]) : null)
     )
   );
+  return card;
 }
 
 // ===== FLOORS =====
@@ -1010,7 +1533,7 @@ function renderFloors() {
           el('span', { class: 'area-name' }, icon('category', 'sm'), area),
           el('span', { class: 'area-group-count' }, `${done}/${list.length} erledigt`)
         ),
-        el('div', { class: 'task-table-scroll' }, buildTaskTable(list))
+        el('div', { class: 'task-table-scroll' }, buildTaskTable(sortTasks(list)))
       )
     );
   });
@@ -1021,48 +1544,234 @@ function renderFloors() {
 function renderTrades() {
   const main = $('#main');
   main.innerHTML = '';
-  // Group by trade
-  const tradeGroups = {};
-  state.contacts.forEach(c => {
-    if (!c.trade) return;
-    if (!tradeGroups[c.trade]) tradeGroups[c.trade] = [];
-    tradeGroups[c.trade].push(c);
-  });
-  // count tasks per trade
-  const trades = Object.keys(tradeGroups).sort((a,b) => a.localeCompare(b,'de'));
 
+  // Alle vorhandenen Gewerke sammeln – aus Kontakten UND aus Aufgaben
+  const tradeSet = new Set();
+  state.contacts.forEach(c => { if (c.trade) tradeSet.add(c.trade); });
+  state.tasks.forEach(t => {
+    subContacts(t).forEach(s => { if (s.trade) tradeSet.add(s.trade); });
+  });
+  const trades = [...tradeSet].sort((a,b) => a.localeCompare(b,'de'));
+
+  // Per-Trade Statistiken
+  const tradeStats = {};
+  trades.forEach(tr => {
+    const tradeContacts = state.contacts.filter(c => c.trade === tr);
+    // Aufgaben: alle die diesen Trade haben (direkt via subs oder Verantwortlich-Trade)
+    const tasksSet = new Map();
+    state.tasks.forEach(t => {
+      const subs = subContacts(t);
+      const subTrades = subs.map(s => s.trade);
+      const respTrade = contactById(t.responsible_id)?.trade;
+      if (subTrades.includes(tr) || (respTrade === tr && !subs.length)) {
+        tasksSet.set(t.id, t);
+      }
+    });
+    const tasks = [...tasksSet.values()];
+    const done = tasks.filter(t => t.status === 'Erledigt');
+    const inProgress = tasks.filter(t => t.status === 'In Arbeit');
+    const blocked = tasks.filter(t => t.status !== 'Erledigt' && (t.status === 'Blockiert' || isTaskBlocked(t)));
+    const open = tasks.filter(t => t.status !== 'Erledigt');
+    const totalH = tasks.reduce((s,t) => s + (Number(t.effort_hours) || 0), 0);
+    const doneH = done.reduce((s,t) => s + (Number(t.effort_hours) || 0), 0);
+    const openH = totalH - doneH;
+    const pct = tasks.length ? Math.round((done.length / tasks.length) * 100) : 0;
+    
+    tradeStats[tr] = {
+      contacts: tradeContacts,
+      tasks, done, inProgress, blocked, open,
+      totalH, doneH, openH, pct
+    };
+  });
+
+  // Pill-Tabs zum schnellen Wechseln + "Übersicht" Button
   main.appendChild(el('div', { class: 'pill-tabs' },
+    el('button', { class: 'pill-tab' + (!state.currentTrade ? ' active' : ''),
+      onClick: () => { state.currentTrade = null; renderTrades(); } }, 'Übersicht'),
     ...trades.map(tr => {
-      const cs = tradeGroups[tr];
-      const taskIds = new Set();
-      cs.forEach(c => tasksForContact(c.id).filter(t => t.status !== 'Erledigt').forEach(t => taskIds.add(t.id)));
-      const count = taskIds.size;
-      return el('button', { class: 'pill-tab' + ((state.currentTrade && contactById(state.currentTrade)?.trade === tr) ? ' active' : ''),
-        onClick: () => { state.currentTrade = cs[0].id; renderTrades(); } }, `${tr} (${count})`);
+      const s = tradeStats[tr];
+      const isActive = state.currentTrade && contactById(state.currentTrade)?.trade === tr;
+      return el('button', { 
+        class: 'pill-tab' + (isActive ? ' active' : ''),
+        onClick: () => { 
+          // ersten Kontakt mit diesem Trade nehmen, oder pseudo
+          const firstContact = s.contacts[0];
+          if (firstContact) {
+            state.currentTrade = firstContact.id;
+          } else {
+            state.currentTrade = '__trade__' + tr; // Fallback wenn kein Kontakt
+          }
+          renderTrades(); 
+        } 
+      }, `${tr} (${s.open.length})`);
     })
   ));
+
+  // ===== ÜBERSICHT: alle Gewerke mit Statistiken =====
   if (!state.currentTrade) {
-    main.appendChild(el('div', { class: 'empty-state' }, icon('construction', 'xl'),
-      el('h3', {}, 'Wähle ein Gewerk'), el('div', {}, 'Oben einen Filter klicken.')));
+    const totalProject = state.tasks.reduce((s,t) => s + (Number(t.effort_hours)||0), 0);
+    
+    // Oben: Gesamtprojekt-Zusammenfassung
+    main.appendChild(el('div', { class: 'section' },
+      el('div', { class: 'section-head' }, el('h2', {}, icon('insights'), `Übersicht aller Gewerke (${trades.length})`))
+    ));
+    
+    if (!trades.length) {
+      main.appendChild(el('div', { class: 'empty-state' }, icon('construction', 'xl'),
+        el('h3', {}, 'Noch keine Gewerke')));
+      return;
+    }
+    
+    // Sortiere Gewerke nach offenen Stunden (am meisten zuerst)
+    const sortedTrades = trades.slice().sort((a,b) => tradeStats[b].openH - tradeStats[a].openH);
+    
+    const grid = el('div', { class: 'trade-stat-grid' });
+    sortedTrades.forEach(tr => {
+      const s = tradeStats[tr];
+      grid.appendChild(buildTradeStatCard(tr, s));
+    });
+    main.appendChild(grid);
     return;
   }
-  const c = contactById(state.currentTrade);
-  if (!c) return;
-  const tradeContacts = tradeGroups[c.trade] || [c];
-  const allTasks = new Map();
-  tradeContacts.forEach(ct => tasksForContact(ct.id).forEach(t => allTasks.set(t.id, t)));
-  const tasks = [...allTasks.values()].sort((a,b) => a.code - b.code);
 
-  main.appendChild(
-    el('div', { class: 'section' },
-      el('div', { class: 'section-head' },
-        el('h2', {}, icon('construction'), `${c.trade} – ${tasks.length} Aufgaben`)
+  // ===== DETAIL: einzelnes Gewerk =====
+  let activeTrade;
+  if (state.currentTrade && state.currentTrade.startsWith('__trade__')) {
+    activeTrade = state.currentTrade.substring(9);
+  } else {
+    const c = contactById(state.currentTrade);
+    activeTrade = c?.trade;
+  }
+  if (!activeTrade) { state.currentTrade = null; renderTrades(); return; }
+  
+  const s = tradeStats[activeTrade];
+  if (!s) { state.currentTrade = null; renderTrades(); return; }
+  
+  // Hero-Section mit Trade-Statistiken
+  main.appendChild(el('div', { class: 'section' },
+    el('div', { class: 'section-head' },
+      el('h2', {}, icon('construction'), activeTrade),
+      el('button', { class: 'btn small', onClick: () => { state.currentTrade = null; renderTrades(); } }, 
+        icon('arrow_back', 'sm'), 'Zur Übersicht')
+    ),
+    buildTradeDetailHero(activeTrade, s)
+  ));
+  
+  // Kontakte zu diesem Gewerk
+  if (s.contacts.length) {
+    main.appendChild(el('div', { class: 'section' },
+      el('div', { class: 'section-head' }, el('h2', {}, icon('groups'), `Kontakte (${s.contacts.length})`)),
+      el('div', { class: 'contacts-grid' }, ...s.contacts.map(c => buildContactCard(c)))
+    ));
+  }
+  
+  // Aufgaben
+  if (s.tasks.length) {
+    main.appendChild(el('div', { class: 'section' },
+      el('div', { class: 'section-head' }, el('h2', {}, icon('checklist'), `Aufgaben (${s.tasks.length})`)),
+      el('div', { class: 'task-table-wrap' }, 
+        el('div', { class: 'task-table-scroll' }, buildTaskTable(sortTasks(s.tasks)))
+      )
+    ));
+  }
+}
+
+function buildTradeStatCard(tradeName, s) {
+  const hasH = s.totalH > 0;
+  const color = colorFromName(tradeName);
+  
+  return el('div', {
+    class: 'trade-stat-card',
+    style: `border-left: 3px solid ${color}`,
+    onClick: () => {
+      const firstContact = s.contacts[0];
+      state.currentTrade = firstContact ? firstContact.id : '__trade__' + tradeName;
+      renderTrades();
+    }
+  },
+    // Header
+    el('div', { class: 'trade-stat-head' },
+      el('div', { class: 'trade-stat-name' }, tradeName),
+      el('div', { class: 'trade-stat-pct' }, s.pct + '%')
+    ),
+    // Progress Bar
+    el('div', { class: 'progress-bar' }, 
+      el('div', { class: 'progress-bar-fill', style: `width:${s.pct}%; background:${color}` })
+    ),
+    // Stats Grid
+    el('div', { class: 'trade-stat-grid-inner' },
+      el('div', { class: 'trade-stat-cell' },
+        el('div', { class: 'trade-stat-cell-value' }, s.tasks.length),
+        el('div', { class: 'trade-stat-cell-label' }, s.tasks.length === 1 ? 'Aufgabe' : 'Aufgaben')
       ),
-      // Show contacts in this trade
-      tradeContacts.length > 0 ? el('div', { class: 'contacts-grid', style: 'margin-bottom: 20px' },
-        ...tradeContacts.map(ct => buildContactCard(ct))
+      el('div', { class: 'trade-stat-cell' },
+        el('div', { class: 'trade-stat-cell-value', style: 'color: var(--sys-success)' }, s.done.length),
+        el('div', { class: 'trade-stat-cell-label' }, 'erledigt')
+      ),
+      el('div', { class: 'trade-stat-cell' },
+        el('div', { class: 'trade-stat-cell-value', style: 'color: var(--sys-progress)' }, s.inProgress.length),
+        el('div', { class: 'trade-stat-cell-label' }, 'in Arbeit')
+      ),
+      s.blocked.length ? el('div', { class: 'trade-stat-cell' },
+        el('div', { class: 'trade-stat-cell-value', style: 'color: var(--sys-error)' }, s.blocked.length),
+        el('div', { class: 'trade-stat-cell-label' }, 'blockiert')
       ) : null,
-      el('div', { class: 'task-table-wrap' }, el('div', { class: 'task-table-scroll' }, buildTaskTable(tasks)))
+    ),
+    // Hours
+    hasH ? el('div', { class: 'trade-stat-hours' },
+      el('div', { class: 'trade-stat-hours-row' },
+        el('span', { class: 'text-muted text-sm' }, 'Aufwand'),
+        el('span', { style: 'font-weight: 600' }, s.totalH.toFixed(0) + ' h')
+      ),
+      el('div', { class: 'trade-stat-hours-row' },
+        el('span', { class: 'text-muted text-sm' }, 'davon erledigt'),
+        el('span', { style: 'color: var(--sys-success); font-weight: 500' }, s.doneH.toFixed(0) + ' h')
+      ),
+      el('div', { class: 'trade-stat-hours-row' },
+        el('span', { class: 'text-muted text-sm' }, 'noch offen'),
+        el('span', { style: 'color: var(--fg); font-weight: 600' }, s.openH.toFixed(0) + ' h')
+      )
+    ) : el('div', { class: 'trade-stat-hours' },
+      el('div', { class: 'text-muted text-sm', style: 'text-align:center; padding: 8px' }, 'Aufwand noch nicht gepflegt')
+    ),
+    // Footer: contact count
+    el('div', { class: 'trade-stat-foot' },
+      icon('groups', 'sm'),
+      ' ' + s.contacts.length + ' Kontakt' + (s.contacts.length !== 1 ? 'e' : '')
+    )
+  );
+}
+
+function buildTradeDetailHero(tradeName, s) {
+  const color = colorFromName(tradeName);
+  return el('div', { class: 'trade-detail-hero' },
+    // KPI Cards für dieses Gewerk
+    el('div', { class: 'kpi-grid' },
+      el('div', { class: 'kpi-card accent' },
+        el('div', { class: 'kpi-label' }, icon('trending_up', 'sm'), 'Fortschritt'),
+        el('div', { class: 'kpi-value' }, s.pct + '%'),
+        el('div', { class: 'progress-bar' }, el('div', { class: 'progress-bar-fill', style: `width:${s.pct}%` })),
+        el('div', { class: 'kpi-detail' }, `${s.done.length} von ${s.tasks.length} Aufgaben erledigt`)
+      ),
+      el('div', { class: 'kpi-card', style: 'cursor:pointer', onClick: () => {
+        // Filter zur Aufgaben mit diesem Gewerk + In Arbeit
+        const cs = s.contacts;
+        if (cs[0]) gotoTasksWithFilter({ responsible: cs[0].id, status: 'In Arbeit' });
+      }},
+        el('div', { class: 'kpi-label' }, icon('pending_actions', 'sm'), 'In Arbeit'),
+        el('div', { class: 'kpi-value' }, s.inProgress.length),
+        el('div', { class: 'kpi-detail' }, 'aktive Aufgaben')
+      ),
+      el('div', { class: 'kpi-card' + (s.blocked.length ? ' danger' : '') },
+        el('div', { class: 'kpi-label' }, icon('block', 'sm'), 'Blockiert / Wartet'),
+        el('div', { class: 'kpi-value' }, s.blocked.length),
+        el('div', { class: 'kpi-detail' }, 'warten auf andere')
+      ),
+      el('div', { class: 'kpi-card' },
+        el('div', { class: 'kpi-label' }, icon('schedule', 'sm'), 'Aufwand'),
+        el('div', { class: 'kpi-value' }, s.totalH.toFixed(0) + 'h'),
+        el('div', { class: 'kpi-detail' }, `${s.doneH.toFixed(0)}h erledigt · ${s.openH.toFixed(0)}h offen`)
+      )
     )
   );
 }
@@ -1073,24 +1782,84 @@ function renderContacts() {
   main.innerHTML = '';
   if (state.contactDetail) { renderContactDetail(state.contactDetail); return; }
 
-  // Group by trade
-  const groups = {};
-  state.contacts.forEach(c => {
-    const k = c.trade || 'Ohne Gewerk';
-    if (!groups[k]) groups[k] = [];
-    groups[k].push(c);
-  });
-  Object.entries(groups).sort((a,b) => a[0].localeCompare(b[0], 'de')).forEach(([trade, list]) => {
-    main.appendChild(
-      el('div', { class: 'section' },
-        el('div', { class: 'section-head' },
-          el('h2', {}, icon('handyman'), trade),
-          el('span', { class: 'badge' }, list.length + ' Kontakt' + (list.length !== 1 ? 'e' : ''))
-        ),
-        el('div', { class: 'contacts-grid' }, ...list.map(c => buildContactCard(c)))
-      )
+  // Filter Bar
+  const filterBar = el('div', { class: 'task-filter-bar', style: 'border-radius: var(--radius-lg); margin-bottom: 20px; border: 1px solid var(--border); background: var(--bg-elev)' },
+    el('div', { class: 'search-input' },
+      icon('search', 'sm'),
+      el('input', { type: 'search', placeholder: 'Person, Firma oder Gewerk suchen…', value: state.contactQuery,
+        onInput: (e) => { state.contactQuery = e.target.value; renderContacts(); } })
+    ),
+    el('select', { onChange: (e) => { state.contactSort = e.target.value; saveState(); renderContacts(); } },
+      el('option', { value: 'trade', selected: state.contactSort === 'trade' }, 'Sortiert nach Gewerk'),
+      el('option', { value: 'name', selected: state.contactSort === 'name' }, 'Sortiert nach Name'),
+      el('option', { value: 'company', selected: state.contactSort === 'company' }, 'Sortiert nach Firma'),
+      el('option', { value: 'tasks', selected: state.contactSort === 'tasks' }, 'Sortiert nach offenen Aufgaben')
+    ),
+    state.contactQuery ? el('button', { class: 'btn small', onClick: () => {
+      state.contactQuery = '';
+      renderContacts();
+    }}, icon('filter_alt_off', 'sm'), 'Reset') : null
+  );
+  main.appendChild(filterBar);
+
+  // Filter contacts by search query
+  const q = state.contactQuery.trim().toLowerCase();
+  let filtered = state.contacts;
+  if (q) {
+    filtered = filtered.filter(c => 
+      (c.name && c.name.toLowerCase().includes(q)) ||
+      (c.company && c.company.toLowerCase().includes(q)) ||
+      (c.trade && c.trade.toLowerCase().includes(q)) ||
+      (c.role && c.role.toLowerCase().includes(q))
     );
-  });
+  }
+
+  // Sortieren
+  const collator = new Intl.Collator('de');
+  if (state.contactSort === 'name') {
+    filtered = filtered.slice().sort((a,b) => collator.compare(contactPrimary(a), contactPrimary(b)));
+  } else if (state.contactSort === 'company') {
+    filtered = filtered.slice().sort((a,b) => collator.compare(a.company || 'zzz', b.company || 'zzz'));
+  } else if (state.contactSort === 'tasks') {
+    filtered = filtered.slice().sort((a,b) => {
+      const ao = tasksForContact(a.id).filter(t => t.status !== 'Erledigt').length;
+      const bo = tasksForContact(b.id).filter(t => t.status !== 'Erledigt').length;
+      return bo - ao;
+    });
+  }
+  // bei 'trade' default: gruppiert anzeigen
+
+  if (!filtered.length) {
+    main.appendChild(el('div', { class: 'empty-state' }, icon('search_off', 'xl'), el('h3', {}, 'Keine Treffer')));
+    if (state.isAdmin) main.appendChild(el('button', { class: 'btn primary mt-2', onClick: () => openContactEdit() }, icon('add', 'sm'), 'Neuer Kontakt'));
+    return;
+  }
+
+  if (state.contactSort === 'trade') {
+    // Gruppieren nach Gewerk
+    const groups = {};
+    filtered.forEach(c => {
+      const k = c.trade || 'Ohne Gewerk';
+      if (!groups[k]) groups[k] = [];
+      groups[k].push(c);
+    });
+    Object.entries(groups).sort((a,b) => collator.compare(a[0], b[0])).forEach(([trade, list]) => {
+      main.appendChild(
+        el('div', { class: 'section' },
+          el('div', { class: 'section-head' },
+            el('h2', {}, icon('handyman'), trade),
+            el('span', { class: 'badge' }, list.length + ' Kontakt' + (list.length !== 1 ? 'e' : ''))
+          ),
+          el('div', { class: 'contacts-grid' }, ...list.map(c => buildContactCard(c)))
+        )
+      );
+    });
+  } else {
+    // Flache Liste
+    main.appendChild(el('div', { class: 'section' },
+      el('div', { class: 'contacts-grid' }, ...filtered.map(c => buildContactCard(c)))
+    ));
+  }
 
   if (state.isAdmin) {
     main.appendChild(el('button', { class: 'btn primary mt-2', onClick: () => openContactEdit() },
@@ -1164,7 +1933,7 @@ function renderContactDetail(contactId) {
     el('div', { class: 'section' },
       el('div', { class: 'section-head' }, el('h2', {}, icon('checklist'), `Aufgaben (${tasks.length})`)),
       tasks.length
-        ? el('div', { class: 'task-table-wrap' }, el('div', { class: 'task-table-scroll' }, buildTaskTable(tasks)))
+        ? el('div', { class: 'task-table-wrap' }, el('div', { class: 'task-table-scroll' }, buildTaskTable(sortTasks(tasks))))
         : el('div', { class: 'empty-state' }, icon('task_alt', 'xl'), el('h3', {}, 'Keine Aufgaben'))
     )
   );
@@ -1351,6 +2120,35 @@ async function deleteTask(taskId) {
 // ===== CONTACT FORM =====
 function openContactEdit(c) {
   const isNew = !c;
+  let saved = false;
+  const save = async (silent=false) => {
+    if (saved) return false;
+    const name = $('#c-name')?.value.trim();
+    const company = $('#c-company')?.value.trim();
+    if (!name && !company) { if (!silent) toast('Kontaktperson oder Firma angeben', 'error'); return false; }
+    saved = true;
+    const payload = {
+      name: name || null,
+      company: company || null,
+      trade: $('#c-trade').value.trim() || null,
+      role: $('#c-role').value.trim() || null,
+      phone: $('#c-phone').value.trim() || null,
+      whatsapp: $('#c-whatsapp').value.trim() || null,
+      email: $('#c-email').value.trim() || null,
+      notes: $('#c-notes').value.trim() || null,
+      category: c?.category || 'Person',
+    };
+    const op = isNew ? sb.from('contacts').insert(payload).select().single()
+                     : sb.from('contacts').update(payload).eq('id', c.id).select().single();
+    const { data, error } = await op;
+    if (error) { if (!silent) toast('Fehler: ' + error.message, 'error'); saved = false; return false; }
+    if (isNew) state.contacts.push(data);
+    else Object.assign(state.contacts.find(x => x.id === c.id), data);
+    await loadAll();
+    if (!silent) toast('Gespeichert');
+    return true;
+  };
+
   const body = el('div', {},
     el('div', { class: 'form-row' },
       el('div', { class: 'form-group' },
@@ -1392,35 +2190,14 @@ function openContactEdit(c) {
     )
   );
   showModal(isNew ? 'Neuer Kontakt' : 'Kontakt bearbeiten', body, {
+    onAutoSave: async () => { if (!saved) { await save(true); render(); } },
     actions: [
-      { label: 'Speichern', ic: 'save', cls: 'btn primary', onClick: async () => {
-        const name = $('#c-name').value.trim();
-        const company = $('#c-company').value.trim();
-        if (!name && !company) { toast('Kontaktperson oder Firma angeben', 'error'); return; }
-        const payload = {
-          name: name || null,
-          company: company || null,
-          trade: $('#c-trade').value.trim() || null,
-          role: $('#c-role').value.trim() || null,
-          phone: $('#c-phone').value.trim() || null,
-          whatsapp: $('#c-whatsapp').value.trim() || null,
-          email: $('#c-email').value.trim() || null,
-          notes: $('#c-notes').value.trim() || null,
-          category: c?.category || 'Person',
-        };
-        const op = isNew ? sb.from('contacts').insert(payload).select().single()
-                         : sb.from('contacts').update(payload).eq('id', c.id).select().single();
-        const { data, error } = await op;
-        if (error) { toast('Fehler: ' + error.message, 'error'); return; }
-        if (isNew) state.contacts.push(data);
-        else Object.assign(state.contacts.find(x => x.id === c.id), data);
-        await loadAll(); // refresh datalists
-        toast('Gespeichert');
-        closeModal();
-        render();
+      { label: 'Speichern', ic: 'save', cls: 'btn primary', primary: true, onClick: async () => {
+        if (await save()) { closeModal(); render(); } else { saved = false; }
       }},
       ...(!isNew && state.isAdmin ? [{ label: 'Löschen', ic: 'delete', cls: 'btn danger', onClick: async () => {
         if (!confirm('Kontakt wirklich löschen?')) return;
+        saved = true; // skip auto-save
         await sb.from('contacts').delete().eq('id', c.id);
         state.contacts = state.contacts.filter(x => x.id !== c.id);
         state.contactDetail = null;
@@ -1598,17 +2375,24 @@ function readTaskForm() {
 }
 
 function openTaskEdit(t) {
+  let saved = false;
+  const save = async (silent=false) => {
+    if (saved) return;
+    saved = true;
+    const payload = readTaskForm();
+    if (!payload.title) { if (!silent) toast('Titel fehlt', 'error'); saved = false; return false; }
+    const { data, error } = await sb.from('tasks').update(payload).eq('id', t.id).select().single();
+    if (error) { if (!silent) toast('Fehler: ' + error.message, 'error'); saved = false; return false; }
+    Object.assign(state.tasks.find(x => x.id === t.id), data);
+    await sb.from('activity_log').insert({ task_id: t.id, actor: state.activeUser || 'Admin', action: 'Aufgabe bearbeitet' });
+    if (!silent) toast('Gespeichert');
+    return true;
+  };
   showModal('Aufgabe bearbeiten', taskForm(t), {
+    onAutoSave: async () => { if (!saved) { await save(true); render(); } },
     actions: [
-      { label: 'Speichern', ic: 'save', cls: 'btn primary', onClick: async () => {
-        const payload = readTaskForm();
-        const { data, error } = await sb.from('tasks').update(payload).eq('id', t.id).select().single();
-        if (error) { toast('Fehler: ' + error.message, 'error'); return; }
-        Object.assign(state.tasks.find(x => x.id === t.id), data);
-        await sb.from('activity_log').insert({ task_id: t.id, actor: 'Admin', action: 'Aufgabe bearbeitet' });
-        toast('Gespeichert');
-        closeModal();
-        render();
+      { label: 'Speichern', ic: 'save', cls: 'btn primary', primary: true, onClick: async () => {
+        if (await save()) { closeModal(); render(); } else { saved = false; }
       }}
     ]
   }, true);
@@ -1616,19 +2400,25 @@ function openTaskEdit(t) {
 
 function openTaskNew() {
   const nextCode = Math.max(0, ...state.tasks.map(t => t.code)) + 1;
+  let saved = false;
+  const save = async (silent=false) => {
+    if (saved) return;
+    const payload = readTaskForm();
+    if (!payload.title) { if (!silent) toast('Titel fehlt', 'error'); return false; }
+    saved = true;
+    payload.code = nextCode;
+    const { data, error } = await sb.from('tasks').insert(payload).select().single();
+    if (error) { if (!silent) toast('Fehler: ' + error.message, 'error'); saved = false; return false; }
+    state.tasks.push(data);
+    await sb.from('activity_log').insert({ task_id: data.id, actor: state.activeUser || 'Admin', action: 'Aufgabe erstellt' });
+    if (!silent) toast('Erstellt');
+    return true;
+  };
   showModal('Neue Aufgabe', taskForm({}), {
+    onAutoSave: async () => { if (!saved) { await save(true); render(); } },
     actions: [
-      { label: 'Erstellen', ic: 'add', cls: 'btn primary', onClick: async () => {
-        const payload = readTaskForm();
-        if (!payload.title) { toast('Titel fehlt', 'error'); return; }
-        payload.code = nextCode;
-        const { data, error } = await sb.from('tasks').insert(payload).select().single();
-        if (error) { toast('Fehler: ' + error.message, 'error'); return; }
-        state.tasks.push(data);
-        await sb.from('activity_log').insert({ task_id: data.id, actor: 'Admin', action: 'Aufgabe erstellt' });
-        toast('Erstellt');
-        closeModal();
-        render();
+      { label: 'Erstellen', ic: 'add', cls: 'btn primary', primary: true, onClick: async () => {
+        if (await save()) { closeModal(); render(); } else { saved = false; }
       }}
     ]
   }, true);
@@ -1662,23 +2452,73 @@ function exportCSV() {
 }
 
 // ===== MODAL =====
+// Globaler Auto-Save Handler – wird beim Schließen ausgeführt
+let pendingAutoSave = null;
+
 function showModal(title, body, opts={}, wide=false) {
   closeModal();
-  const overlay = el('div', { class: 'modal-overlay', id: 'modal-overlay', onClick: (e) => { if (e.target === overlay) closeModal(); } });
+  
+  const overlay = el('div', { class: 'modal-overlay', id: 'modal-overlay' });
+  // KEIN onClick auf Overlay mehr - kein versehentliches Schließen
+  
+  const closeBtn = el('button', { class: 'btn icon-only', onClick: () => closeModalWithSave() }, icon('close'));
   const modal = el('div', { class: 'modal' + (wide ? ' wide' : '') },
     el('div', { class: 'modal-header' },
       el('h2', {}, title),
-      el('button', { class: 'btn icon-only', onClick: closeModal }, icon('close'))
+      closeBtn
     ),
     el('div', { class: 'modal-body' }, body),
     opts.actions?.length ? el('div', { class: 'modal-footer' },
-      ...opts.actions.map(a => el('button', { class: a.cls, onClick: a.onClick }, a.ic ? icon(a.ic, 'sm') : null, a.label))
+      ...opts.actions.map(a => el('button', { 
+        class: a.cls, 
+        'data-primary': a.primary ? '1' : null,
+        onClick: a.onClick 
+      }, a.ic ? icon(a.ic, 'sm') : null, a.label))
     ) : null
   );
   overlay.appendChild(modal);
   document.body.appendChild(overlay);
+  
+  // Auto-Save Handler registrieren
+  pendingAutoSave = opts.onAutoSave || null;
+  
+  // Enter-Taste in Inputs (außer Textareas) löst Primary-Action aus
+  modal.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'BUTTON') {
+      const primary = modal.querySelector('[data-primary="1"]');
+      if (primary) {
+        e.preventDefault();
+        primary.click();
+      }
+    }
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeModalWithSave();
+    }
+  });
+  
+  // Erstes Input/Textarea fokussieren
+  setTimeout(() => {
+    const firstInput = modal.querySelector('input:not([type=hidden]), textarea, select');
+    if (firstInput) firstInput.focus();
+  }, 100);
 }
-function closeModal() { const o = $('#modal-overlay'); if (o) o.remove(); }
+
+async function closeModalWithSave() {
+  if (pendingAutoSave) {
+    try {
+      await pendingAutoSave();
+    } catch(e) { console.error('Auto-save failed:', e); }
+    pendingAutoSave = null;
+  }
+  closeModal();
+}
+
+function closeModal() { 
+  pendingAutoSave = null;
+  const o = $('#modal-overlay'); 
+  if (o) o.remove(); 
+}
 
 // ===== LOGIN =====
 function openLogin() {
@@ -1690,7 +2530,7 @@ function openLogin() {
         el('option', { value: '' }, '— bitte wählen —'),
         ...state.contacts.map(c => {
           const lbl = contactPrimary(c) + (c.trade ? ' (' + c.trade + ')' : '');
-          return el('option', { value: lbl, selected: state.activeUser === lbl }, lbl);
+          return el('option', { value: c.id, selected: state.activeUserId === c.id }, lbl);
         })
       )
     ),
@@ -1702,16 +2542,31 @@ function openLogin() {
   );
   showModal('Login', body, {
     actions: [
-      ...(state.isAdmin ? [{ label: 'Admin-Logout', ic: 'logout', cls: 'btn', onClick: () => {
+      ...(state.activeUserId ? [{ label: 'Abmelden', ic: 'logout', cls: 'btn', onClick: () => {
+        state.activeUser = null;
+        state.activeUserId = null;
+        localStorage.removeItem('oda-user');
+        localStorage.removeItem('oda-user-id');
+        toast('Abgemeldet');
+        closeModal(); render();
+      }}] : []),
+      ...(state.isAdmin ? [{ label: 'Admin-Logout', ic: 'admin_panel_settings', cls: 'btn', onClick: () => {
         state.isAdmin = false;
         localStorage.removeItem('oda-admin');
         toast('Admin abgemeldet');
         closeModal(); render();
       }}] : []),
-      { label: 'Bestätigen', ic: 'check', cls: 'btn primary', onClick: () => {
-        const user = $('#login-user').value;
+      { label: 'Bestätigen', ic: 'check', cls: 'btn primary', primary: true, onClick: () => {
+        const userId = $('#login-user').value;
         const code = $('#login-code').value;
-        if (user) { state.activeUser = user; localStorage.setItem('oda-user', user); }
+        if (userId) {
+          const c = contactById(userId);
+          const lbl = c ? (contactPrimary(c) + (c.trade ? ' (' + c.trade + ')' : '')) : '';
+          state.activeUser = lbl;
+          state.activeUserId = userId;
+          localStorage.setItem('oda-user', lbl);
+          localStorage.setItem('oda-user-id', userId);
+        }
         if (code) {
           if (code === ADMIN_CODE) {
             state.isAdmin = true;
@@ -1758,16 +2613,28 @@ async function init() {
   if (localStorage.getItem('oda-admin') === '1') state.isAdmin = true;
   const savedUser = localStorage.getItem('oda-user');
   if (savedUser) state.activeUser = savedUser;
+  const savedUserId = localStorage.getItem('oda-user-id');
+  if (savedUserId) state.activeUserId = savedUserId;
   if (localStorage.getItem('oda-theme') === 'dark') {
     document.documentElement.classList.add('dark');
     document.body.classList.add('dark');
   }
+  loadState();
   $$('.tab').forEach(t => t.addEventListener('click', () => {
     state.currentView = t.dataset.view;
+    saveState();
     render();
   }));
   $('#login-btn').addEventListener('click', openLogin);
   $('#theme-btn').addEventListener('click', toggleTheme);
+  $('#theme-fab').addEventListener('click', toggleTheme);
+  
+  // Beim Resize Header neu rendern (für Mobile-Layout)
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(updateHeader, 150);
+  });
 
   try {
     await loadAll();
