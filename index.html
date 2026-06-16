@@ -38,27 +38,39 @@
   --danger: #51080d;
   --warning: #b88a3e;
 
-  /* System Status — wie Webflow System Error/Success/Info/Warning,
-     mit Hintergrund (15% opacity), Border + Text in voller Farbe */
-  --sys-info: #4a585e;
-  --sys-info-bg: rgba(74, 88, 94, 0.12);
-  --sys-info-border: rgba(74, 88, 94, 0.32);
+  /* System Status Colors aus Webflow:
+     Error #d64545, Success #2e9b63, Info #2f6fed, Warning #e6a23c
+     Mit color-mix: bg=12%, border=35%, text=voll */
+  
+  /* Offen = neutral grau, keine system-color (clean) */
+  --sys-info: var(--fg-muted);
+  --sys-info-bg: var(--bg-subtle);
+  --sys-info-border: var(--border-strong);
 
-  --sys-progress: #2c6cb0;
-  --sys-progress-bg: rgba(44, 108, 176, 0.14);
-  --sys-progress-border: rgba(44, 108, 176, 0.38);
+  /* Info-Blau für Anzeigen wie "Notizen vorhanden" */
+  --sys-blue: #2f6fed;
+  --sys-blue-bg: color-mix(in srgb, #2f6fed 12%, transparent);
+  --sys-blue-border: color-mix(in srgb, #2f6fed 35%, transparent);
 
-  --sys-warn: #b88a3e;
-  --sys-warn-bg: rgba(184, 138, 62, 0.16);
-  --sys-warn-border: rgba(184, 138, 62, 0.45);
+  /* In Arbeit = System Info Blau */
+  --sys-progress: #2f6fed;
+  --sys-progress-bg: color-mix(in srgb, #2f6fed 12%, transparent);
+  --sys-progress-border: color-mix(in srgb, #2f6fed 35%, transparent);
 
-  --sys-error: #51080d;
-  --sys-error-bg: rgba(81, 8, 13, 0.10);
-  --sys-error-border: rgba(81, 8, 13, 0.32);
+  /* Wartet = System Warning */
+  --sys-warn: #e6a23c;
+  --sys-warn-bg: color-mix(in srgb, #e6a23c 12%, transparent);
+  --sys-warn-border: color-mix(in srgb, #e6a23c 35%, transparent);
 
-  --sys-success: #4f6f49;
-  --sys-success-bg: rgba(79, 111, 73, 0.16);
-  --sys-success-border: rgba(79, 111, 73, 0.42);
+  /* Blockiert = System Error */
+  --sys-error: #d64545;
+  --sys-error-bg: color-mix(in srgb, #d64545 12%, transparent);
+  --sys-error-border: color-mix(in srgb, #d64545 35%, transparent);
+
+  /* Erledigt = System Success */
+  --sys-success: #2e9b63;
+  --sys-success-bg: color-mix(in srgb, #2e9b63 12%, transparent);
+  --sys-success-border: color-mix(in srgb, #2e9b63 35%, transparent);
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -199,26 +211,36 @@ a { color: inherit; text-decoration: none; }
 .tab .material-symbols-rounded { font-size: 18px; }
 
 .main { flex: 1; padding: 28px 24px 100px; max-width: 1600px; margin: 0 auto; width: 100%; }
-/* Admin-Modus visuell hervorheben */
-body.is-admin .topbar {
-  background: linear-gradient(180deg, rgba(81, 8, 13, 0.04), var(--bg-elev));
-  border-bottom: 2px solid var(--brand);
+/* Admin-Modus visuell hervorheben - kompletter Rand um den Bildschirm */
+body.is-admin {
+  position: relative;
 }
-body.is-admin .topbar::before {
-  content: 'ADMIN';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
+body.is-admin::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  border: 4px solid var(--brand);
+  pointer-events: none;
+  z-index: 999;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand) 30%, transparent);
+}
+body.is-admin::after {
+  content: 'ADMIN-MODUS';
+  position: fixed;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
   background: var(--brand);
-  font-size: 0;
-}
-body.is-admin .topbar-brand .brand-mark::after {
-  content: ' · ADMIN';
-  font-size: 11px;
+  color: white;
+  font-size: 9px;
   font-weight: 700;
-  color: var(--brand);
-  letter-spacing: 0.08em;
-  margin-left: 4px;
+  letter-spacing: 0.12em;
+  padding: 3px 14px;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  z-index: 1000;
+  pointer-events: none;
+}
+body.is-admin .topbar {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--brand) 4%, transparent), var(--bg-elev));
 }
 .topbar { position: relative; }
 
@@ -272,17 +294,279 @@ body.is-admin .login-pill .material-symbols-rounded { color: white; }
 }
 .theme-fab .material-symbols-rounded { font-size: 22px; }
 
+.floor-tag.trade-tag {
+  padding-left: 18px;
+  position: relative;
+}
+.floor-tag.trade-tag::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--trade-color, var(--fg-muted));
+}
+
+/* === ACTIVITY FEED === */
+.activity-feed { display: flex; flex-direction: column; gap: 4px; }
+.activity-item {
+  display: flex; gap: 12px;
+  padding: 12px 14px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: all 0.15s ease;
+  align-items: center;
+}
+.activity-item:hover { background: var(--hover); }
+.activity-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600;
+  color: white;
+  flex-shrink: 0;
+}
+.activity-body { 
+  flex: 1; min-width: 0; 
+  display: grid;
+  grid-template-columns: minmax(140px, 200px) 1fr minmax(140px, auto);
+  gap: 14px;
+  align-items: center;
+}
+.activity-who { min-width: 0; }
+.activity-who-name { 
+  font-weight: 600; font-size: 14px; 
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.activity-who-sub { 
+  font-size: 11px; color: var(--fg-muted); 
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.activity-action {
+  font-size: 13px; color: var(--fg);
+  min-width: 0;
+}
+.activity-task {
+  font-size: 12px; color: var(--fg);
+  background: var(--bg-subtle);
+  padding: 5px 9px;
+  border-radius: var(--radius-sm);
+  display: inline-flex; align-items: center; gap: 5px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 100%;
+  min-width: 0;
+}
+.activity-task .material-symbols-rounded { font-size: 14px; color: var(--fg-muted); flex-shrink: 0; }
+.activity-task-text {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.activity-time { 
+  font-size: 11px; color: var(--fg-subtle); 
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .activity-body {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .activity-time { text-align: left; }
+}
+
+/* === INLINE EDITING === */
+.inline-cell { cursor: pointer; transition: background 0.15s ease; }
+.inline-cell:hover { background: var(--hover); }
+.inline-cell-value { display: inline-block; }
+
+.inline-editable {
+  border-bottom: 1px dashed var(--border-strong);
+  padding: 1px 2px;
+  border-radius: 3px;
+  transition: background 0.15s ease;
+}
+.inline-editable:hover {
+  background: var(--hover);
+  border-bottom-color: var(--accent);
+}
+
+.inline-popup-overlay {
+  position: fixed; inset: 0; z-index: 150;
+  background: rgba(0,0,0,0.35);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; backdrop-filter: blur(2px);
+  animation: fadeIn 0.15s ease;
+}
+.inline-popup {
+  background: var(--bg-elev);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  min-width: 280px;
+  max-width: 360px;
+  box-shadow: var(--shadow-lg);
+}
+.inline-popup-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+}
+
+.task-has-comments {
+  color: var(--sys-blue);
+}
+.task-has-comments .material-symbols-rounded {
+  font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Kommentar-Indikator (kompakt mit Tooltip) */
+.comment-indicator {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 7px;
+  background: var(--sys-blue-bg);
+  color: var(--sys-blue);
+  border: 1px solid var(--sys-blue-border);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: help;
+  user-select: none;
+  line-height: 1;
+}
+.comment-indicator .material-symbols-rounded {
+  font-size: 13px;
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.comment-indicator-count {
+  font-variant-numeric: tabular-nums;
+}
+.comment-tooltip {
+  position: fixed;
+  width: 300px;
+  max-width: calc(100vw - 24px);
+  background: var(--bg-elev);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  pointer-events: none;
+  text-align: left;
+}
+.comment-tooltip.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.comment-tooltip-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--sys-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.comment-tooltip-item {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--fg);
+}
+.comment-tooltip-item:last-of-type {
+  border-bottom: none;
+}
+.comment-tooltip-meta {
+  font-size: 10px;
+  color: var(--fg-muted);
+  margin-bottom: 2px;
+  font-weight: 600;
+}
+.comment-tooltip-text {
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.comment-tooltip-more {
+  font-size: 11px;
+  color: var(--fg-muted);
+  font-style: italic;
+  padding-top: 4px;
+}
+
+/* === MOBILE-FREUNDLICHE FILTERS === */
+@media (max-width: 768px) {
+  .task-filter-bar {
+    padding: 10px 12px;
+    gap: 6px;
+  }
+  .task-filter-bar .search-input {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+  .task-filter-bar select {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 0;
+    max-width: 100%;
+    /* Verhindert Überlauf */
+    text-overflow: ellipsis;
+  }
+  .task-filter-bar .btn {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 0;
+  }
+  /* Form selects auf Mobile auch korrekt limitieren */
+  .form-group select,
+  .form-group input {
+    max-width: 100%;
+    width: 100%;
+  }
+  .floor-chips, .chip-list {
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
   .topbar { padding: 10px 14px; gap: 8px; }
   .topbar-brand small { display: none; }
   .topbar-brand .brand-mark { font-size: 16px; }
-  body.is-admin .topbar-brand .brand-mark::after { font-size: 9px; }
+  body.is-admin::before { border-width: 3px; }
+  body.is-admin::after { font-size: 8px; padding: 2px 10px; }
   #theme-btn { display: none !important; }
   .theme-fab { display: flex; }
   .tabs { padding: 4px 12px 0; }
   .tab { padding: 12px 10px; }
   .main { padding: 16px 12px 100px; }
   .login-pill { padding: 4px 10px 4px 4px; font-size: 13px; }
+  .login-pill .material-symbols-rounded { font-size: 12px; }
+  /* Login-Label kürzer */
+  .login-pill #login-label {
+    max-width: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  #countdown-badge {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
 }
 
 .modal-overlay {
@@ -454,7 +738,8 @@ body.is-admin .login-pill .material-symbols-rounded { color: white; }
 .task-table tr.done .task-title { text-decoration: line-through; }
 
 .task-title-cell { white-space: normal; min-width: 240px; max-width: 380px; }
-.task-title { font-weight: 500; line-height: 1.3; }
+.task-title-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.task-title { font-weight: 500; line-height: 1.3; flex: 1; min-width: 0; }
 .task-title-sub {
   font-size: 12px; color: var(--fg-muted);
   margin-top: 2px; display: flex; align-items: center; gap: 4px;
@@ -528,11 +813,13 @@ body.is-admin .login-pill .material-symbols-rounded { color: white; }
 }
 .kanban-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); border-color: var(--border-strong); }
 .kanban-card:active { cursor: grabbing; }
-.kanban-card.dragging { opacity: 0.4; transform: rotate(2deg); }
-.kanban-col.drag-over {
-  background: var(--hover);
-  border-color: var(--accent);
-  border-style: dashed;
+/* SortableJS */
+.kanban-card-ghost { opacity: 0.4; background: var(--hover); }
+.kanban-card-chosen { opacity: 0.9; box-shadow: var(--shadow-md); }
+.kanban-card-drag { 
+  opacity: 0.95;
+  transform: rotate(2deg);
+  cursor: grabbing;
 }
 .kanban-col-body { min-height: 60px; }
 .kanban-card-meta { display: flex; flex-wrap: wrap; gap: 5px; font-size: 11px; margin-bottom: 6px; }
@@ -684,15 +971,144 @@ body.is-admin .login-pill .material-symbols-rounded { color: white; }
 .area-group-count { color: var(--fg-muted); font-weight: 500; font-size: 12px; padding: 2px 9px; background: var(--bg-elev); border-radius: var(--radius-full); }
 
 /* Timeline */
-.timeline { background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 18px; overflow-x: auto; }
-.timeline-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); min-width: 800px; }
+.timeline-legend {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  padding: 12px 0; margin-bottom: 8px;
+}
+.timeline-legend-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  display: inline-block;
+}
+.timeline-legend-line {
+  width: 16px; height: 2px;
+  background: var(--sys-error);
+  display: inline-block;
+}
+.timeline { 
+  background: var(--bg-elev); border: 1px solid var(--border); 
+  border-radius: var(--radius-lg); 
+  padding: 18px;
+  padding-top: 30px; /* mehr Platz oben für HEUTE-Label */
+  overflow-x: auto; 
+  position: relative; 
+}
+.timeline-row { display: flex; align-items: center; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--border); min-width: 900px; }
 .timeline-row:last-child { border-bottom: none; }
-.timeline-task { width: 320px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
-.timeline-task small { display: block; color: var(--fg-muted); font-weight: 400; margin-top: 2px; }
-.timeline-bar-track { flex: 1; height: 26px; background: var(--bg-subtle); border-radius: 5px; position: relative; }
-.timeline-bar { position: absolute; top: 4px; bottom: 4px; background: var(--accent); color: var(--accent-fg); border-radius: 4px; padding: 0 8px; font-size: 11px; display: flex; align-items: center; min-width: 40px; font-weight: 500; }
+.timeline-row.timeline-header { padding: 4px 0 10px; border-bottom: 1px solid var(--border-strong); }
+.timeline-task { flex-shrink: 0; }
+.timeline-task-title { font-size: 13px; font-weight: 500; line-height: 1.3; margin-bottom: 4px; }
+.timeline-task-title.done { 
+  text-decoration: line-through; 
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: var(--fg-muted);
+  color: var(--fg-muted); 
+}
+.timeline-task-meta { font-size: 12px; margin-bottom: 2px; }
+.timeline-row.is-done { opacity: 0.6; }
+
+.timeline-bar-track { 
+  flex: 1; height: 28px; 
+  background: var(--bg-subtle); 
+  border-radius: 5px; 
+  position: relative; 
+}
+.timeline-date-min, .timeline-date-max {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  font-size: 11px; color: var(--fg-muted); font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.timeline-date-min { left: 4px; }
+.timeline-date-max { right: 4px; }
+
+/* Bar + Tag rechts daneben */
+.timeline-bar-with-label {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 1;
+}
+.timeline-bar { 
+  background: var(--accent); color: var(--accent-fg); 
+  border-radius: 4px; padding: 0 8px; font-size: 11px; 
+  display: flex; align-items: center; min-width: 50px; font-weight: 500;
+  height: 20px;
+  white-space: nowrap;
+}
 .timeline-bar.done { background: var(--sys-success); }
-.timeline-bar.blocked { background: var(--sys-error); }
+.timeline-bar.blocked { background: var(--sys-warn); color: white; }
+.timeline-bar.overdue { 
+  background: var(--sys-error); 
+  color: white;
+}
+.timeline-overdue-tag {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 10px; font-weight: 700;
+  color: var(--sys-error);
+  background: var(--sys-error-bg);
+  border: 1px solid var(--sys-error-border);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.timeline-overdue-tag .material-symbols-rounded { font-size: 12px; }
+
+/* Heute-Marker als durchgehende vertikale rote Linie */
+.timeline-with-line { position: relative; }
+.timeline-today-line-global {
+  position: absolute;
+  width: 2px;
+  background: var(--sys-error);
+  z-index: 5;
+  pointer-events: none;
+  box-shadow: 0 0 8px color-mix(in srgb, var(--sys-error) 50%, transparent);
+}
+.timeline-today-dot {
+  position: absolute;
+  top: -4px; left: 50%;
+  transform: translateX(-50%);
+  width: 10px; height: 10px;
+  background: var(--sys-error);
+  border-radius: 50%;
+  box-shadow: 0 0 6px color-mix(in srgb, var(--sys-error) 60%, transparent);
+}
+.timeline-today-label {
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px; font-weight: 700;
+  color: var(--sys-error);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+.timeline-today-date {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px; font-weight: 600;
+  color: var(--sys-error);
+  background: var(--bg-elev);
+  padding: 1px 4px;
+  border-radius: 3px;
+  border: 1px solid var(--sys-error);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Mobile Timeline: schmalere Task-Spalte */
+@media (max-width: 768px) {
+  .timeline { padding: 14px 12px; padding-top: 26px; }
+  .timeline-row { min-width: 600px; gap: 10px; }
+  .timeline-task-title { font-size: 12px; }
+  .timeline-bar { font-size: 10px; padding: 0 6px; min-width: 42px; }
+  .timeline-overdue-tag { font-size: 9px; padding: 1px 4px; }
+}
 
 .empty-state { padding: 60px 20px; text-align: center; color: var(--fg-muted); }
 .empty-state .material-symbols-rounded { font-size: 48px; opacity: 0.4; margin-bottom: 12px; }
@@ -748,10 +1164,10 @@ body.is-admin .login-pill .material-symbols-rounded { color: white; }
     <button class="tab active" data-view="dashboard"><span class="material-symbols-rounded">dashboard</span>Dashboard</button>
     <button class="tab" data-view="tasks"><span class="material-symbols-rounded">checklist</span>Aufgaben</button>
     <button class="tab" data-view="kanban"><span class="material-symbols-rounded">view_kanban</span>Board</button>
+    <button class="tab" data-view="timeline"><span class="material-symbols-rounded">timeline</span>Timeline</button>
     <button class="tab" data-view="floors"><span class="material-symbols-rounded">apartment</span>Stockwerke</button>
     <button class="tab" data-view="trades"><span class="material-symbols-rounded">construction</span>Gewerke</button>
     <button class="tab" data-view="contacts"><span class="material-symbols-rounded">groups</span>Kontakte</button>
-    <button class="tab" data-view="timeline"><span class="material-symbols-rounded">timeline</span>Timeline</button>
     <button class="tab" data-view="activity"><span class="material-symbols-rounded">history</span>Aktivität</button>
   </nav>
 
@@ -764,6 +1180,7 @@ body.is-admin .login-pill .material-symbols-rounded { color: white; }
 <datalist id="companies-list"></datalist>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 
 <script>
 const SUPABASE_URL = 'https://nlrhutqupliplvjmjarg.supabase.co';
@@ -875,12 +1292,13 @@ function toast(msg, ic='check_circle') {
 }
 
 async function loadAll() {
-  const [tR, cR, coR, sR, aR] = await Promise.all([
+  const [tR, cR, coR, sR, aR, tsR] = await Promise.all([
     sb.from('tasks').select('*').order('code'),
     sb.from('contacts').select('*'),
     sb.from('comments').select('*').order('created_at', { ascending: false }),
     sb.from('settings').select('*'),
     sb.from('activity_log').select('*').order('created_at', { ascending: false }).limit(100),
+    sb.from('trade_settings').select('*'),
   ]);
   state.tasks = tR.data || [];
   state.contacts = cR.data || [];
@@ -892,6 +1310,7 @@ async function loadAll() {
   state.comments = coR.data || [];
   state.activity = aR.data || [];
   state.settings = Object.fromEntries((sR.data || []).map(s => [s.key, s.value]));
+  state.tradeSettings = Object.fromEntries((tsR.data || []).map(t => [t.trade, t]));
 
   // Datalists für Autocomplete
   const tradesDL = $('#trades-list');
@@ -902,6 +1321,117 @@ async function loadAll() {
   const companies = [...new Set(state.contacts.map(c => c.company).filter(Boolean))].sort((a,b) => a.localeCompare(b,'de'));
   trades.forEach(t => tradesDL.appendChild(el('option', { value: t })));
   companies.forEach(c => companiesDL.appendChild(el('option', { value: c })));
+}
+
+// Helper: gibt die effektive Farbe und Anzeigename eines Gewerks zurück
+function tradeColor(trade) {
+  if (!trade) return colorFromName('—');
+  return state.tradeSettings?.[trade]?.color || colorFromName(trade);
+}
+function tradeDisplayName(trade) {
+  if (!trade) return '—';
+  return state.tradeSettings?.[trade]?.display_name || trade;
+}
+
+// Helper: Avatar-Farbe für einen Kontakt
+// Wenn der Kontakt zu einem Gewerk gehört → Gewerk-Farbe (dynamisch aktualisierbar)
+// Sonst → eigene Farbe oder aus Name generiert
+function contactColor(c) {
+  if (!c) return colorFromName('—');
+  if (c.trade) return tradeColor(c.trade);
+  return c.color || colorFromName(contactPrimary(c));
+}
+
+// Gewerk umbenennen + Farbe ändern
+async function openTradeEdit(currentTrade) {
+  const settings = state.tradeSettings?.[currentTrade] || {};
+  const currentColor = settings.color || colorFromName(currentTrade);
+  const affectedContacts = state.contacts.filter(c => c.trade === currentTrade);
+  const affectedTasks = state.tasks.filter(t => {
+    const subs = subContacts(t);
+    return subs.some(s => s.trade === currentTrade) || contactById(t.responsible_id)?.trade === currentTrade;
+  });
+  
+  const body = el('div', {},
+    el('div', { class: 'form-group' },
+      el('label', {}, 'Anzeigename des Gewerks'),
+      el('input', { id: 'trade-name', type: 'text', value: currentTrade, placeholder: 'z.B. Elektroinstallation' }),
+      el('div', { class: 'text-muted text-sm mt-1' }, 
+        'Betrifft ' + affectedContacts.length + ' Kontakt' + (affectedContacts.length !== 1 ? 'e' : '') + 
+        ' und ' + affectedTasks.length + ' Aufgabe' + (affectedTasks.length !== 1 ? 'n' : '')
+      )
+    ),
+    el('div', { class: 'form-group' },
+      el('label', {}, 'Farbe für dieses Gewerk'),
+      el('div', { class: 'flex', style: 'gap: 10px; align-items: center' },
+        el('input', { id: 'trade-color', type: 'color', value: currentColor, style: 'width: 60px; height: 40px; padding: 2px; border-radius: var(--radius-md); border: 1px solid var(--border-strong); cursor: pointer' }),
+        el('input', { id: 'trade-color-hex', type: 'text', value: currentColor, placeholder: '#hex', style: 'flex:1', onInput: (e) => {
+          const v = e.target.value.trim();
+          if (/^#[0-9a-f]{6}$/i.test(v)) $('#trade-color').value = v;
+        }}),
+        el('button', { class: 'btn small', type: 'button', onClick: () => {
+          const auto = colorFromName(currentTrade);
+          $('#trade-color').value = auto;
+          $('#trade-color-hex').value = auto;
+        }}, 'Reset')
+      ),
+      el('div', { class: 'text-muted text-sm mt-1' }, 'Wird überall verwendet wo das Gewerk angezeigt wird')
+    )
+  );
+  
+  // Sync color picker mit hex input
+  setTimeout(() => {
+    $('#trade-color')?.addEventListener('input', (e) => {
+      $('#trade-color-hex').value = e.target.value;
+    });
+  }, 100);
+  
+  showModal('Gewerk verwalten', body, {
+    actions: [
+      { label: 'Speichern', ic: 'save', cls: 'btn primary', primary: true, onClick: async () => {
+        const newName = $('#trade-name').value.trim();
+        const newColor = $('#trade-color').value;
+        if (!newName) { toast('Name darf nicht leer sein', 'error'); return; }
+        
+        // 1. Wenn umbenannt: alle Kontakte updaten
+        if (newName !== currentTrade) {
+          const { error: cErr } = await sb.from('contacts').update({ trade: newName }).eq('trade', currentTrade);
+          if (cErr) { toast('Fehler bei Kontakten: ' + cErr.message, 'error'); return; }
+        }
+        
+        // 2. trade_settings upsert
+        // Wenn umbenannt: alten Eintrag löschen, neuen einfügen
+        if (newName !== currentTrade && state.tradeSettings?.[currentTrade]) {
+          await sb.from('trade_settings').delete().eq('trade', currentTrade);
+        }
+        const { error: tsErr } = await sb.from('trade_settings').upsert({
+          trade: newName,
+          color: newColor,
+          display_name: newName,
+          updated_at: new Date().toISOString()
+        });
+        if (tsErr) { toast('Fehler bei Einstellungen: ' + tsErr.message, 'error'); return; }
+        
+        // Activity Log
+        const actor = state.activeUser || 'Admin';
+        await sb.from('activity_log').insert({
+          actor,
+          contact_id: state.activeUserId || null,
+          action: newName !== currentTrade 
+            ? `Gewerk umbenannt: ${currentTrade} → ${newName}`
+            : `Gewerk-Farbe geändert: ${currentTrade}`
+        });
+        
+        toast('Gewerk aktualisiert');
+        closeModal();
+        await loadAll();
+        if (state.currentTrade && state.currentTrade.startsWith('__trade__')) {
+          state.currentTrade = '__trade__' + newName;
+        }
+        render();
+      }}
+    ]
+  });
 }
 
 const contactById = id => state.contacts.find(c => c.id === id);
@@ -968,7 +1498,7 @@ function updateHeader() {
     const display = me ? contactPrimary(me) : state.activeUser;
     loginLabel.textContent = firstName(display);
     loginAvatar.textContent = me ? initials(me.name, me.company) : '?';
-    if (me) loginAvatar.style.background = me.color || colorFromName(contactPrimary(me));
+    if (me) loginAvatar.style.background = contactColor(me);
   } else {
     loginLabel.textContent = 'Login';
     loginAvatar.textContent = '?';
@@ -1010,7 +1540,7 @@ function renderDashboard() {
       const myBlocked = myTasks.filter(t => t.status !== 'Erledigt' && (isTaskBlocked(t) || t.status === 'Blockiert'));
       const myDone = myTasks.filter(t => t.status === 'Erledigt');
       const myUpcoming = myOpen.filter(t => t.planned_end).sort((a,b) => new Date(a.planned_end) - new Date(b.planned_end)).slice(0, 5);
-      const color = me.color || colorFromName(contactPrimary(me));
+      const color = contactColor(me);
       
       const meCard = el('div', { class: 'kpi-card', style: 'display:flex; align-items:center; gap:18px; flex-wrap:wrap; margin-bottom: 16px' },
         el('div', { class: 'contact-card-avatar', style: `background:${color}; width:54px; height:54px; font-size:18px` }, initials(me.name, me.company)),
@@ -1301,6 +1831,7 @@ function buildCellMap(t) {
   const blocked = isTaskBlocked(t) && !isDone;
   const effective = blocked ? 'Blockiert' : t.status;
   const deps = dependencies(t);
+  const commentCount = state.comments.filter(c => c.task_id === t.id).length;
 
   return {
     checkbox: el('td', { onClick: (e) => { e.stopPropagation(); toggleTaskDone(t); }},
@@ -1309,19 +1840,40 @@ function buildCellMap(t) {
       )
     ),
     title: el('td', { class: 'task-title-cell' },
-      el('div', { class: 'task-title' }, t.title),
+      el('div', { class: 'task-title-row' },
+        el('div', { class: 'task-title' }, t.title),
+        commentCount > 0 ? buildCommentIndicator(t.id) : null
+      ),
       deps.length ? el('div', { class: 'task-title-sub' }, icon('arrow_back', 'sm'),
-        'Abhängig von ' + deps.map(c => '#' + c).join(', ')) : null
+        'Wartet auf: ' + deps.map(c => {
+          const dep = state.tasks.find(x => x.code === c);
+          return dep ? dep.title : '#' + c;
+        }).join(', ')) : null
     ),
-    floors: el('td', {}, el('div', { class: 'floor-tags' }, ...(t.floors||[]).map(f => el('span', { class: 'floor-tag' }, f)))),
-    area: el('td', {}, t.area || '—'),
-    trade: el('td', {}, tradeNames.length
-      ? el('div', { class: 'floor-tags' }, ...tradeNames.map(tr => el('span', { class: 'floor-tag' }, tr)))
+    floors: el('td', { class: state.isAdmin ? 'inline-cell' : '', onClick: (e) => { e.stopPropagation(); if (state.isAdmin) inlineEditFloors(t); }}, 
+      (t.floors||[]).length 
+        ? el('div', { class: 'floor-tags' }, ...(t.floors||[]).map(f => el('span', { class: 'floor-tag' }, f)))
+        : el('span', { class: 'text-muted' }, '—')
+    ),
+    area: el('td', { class: state.isAdmin ? 'inline-cell' : '', onClick: (e) => { e.stopPropagation(); if (state.isAdmin) inlineEditArea(t); }}, t.area || '—'),
+    trade: el('td', { class: state.isAdmin ? 'inline-cell' : '', onClick: (e) => { e.stopPropagation(); if (state.isAdmin) inlineEditSubs(t); }}, tradeNames.length
+      ? el('div', { class: 'floor-tags' }, ...tradeNames.map(tr => el('span', { class: 'floor-tag trade-tag', style: `--trade-color:${tradeColor(tr)}` }, tradeDisplayName(tr))))
       : '—'),
-    responsible: el('td', {}, personContact ? buildContactPill(personContact) : (subs[0] ? buildContactPill(subs[0]) : '—')),
-    effort: el('td', {}, t.effort_hours ? t.effort_hours + ' h' : '—'),
-    planned_end: el('td', {}, fmtDate(t.planned_end)),
-    status: el('td', {}, el('span', { class: 'status-pill ' + statusClass(effective) }, effective))
+    responsible: el('td', { class: state.isAdmin ? 'inline-cell' : '', onClick: (e) => { e.stopPropagation(); if (state.isAdmin) inlineEditResponsible(t); }}, 
+      personContact ? buildContactPill(personContact) : (subs[0] ? buildContactPill(subs[0]) : '—')
+    ),
+    effort: el('td', { class: 'inline-cell', onClick: (e) => { e.stopPropagation(); if (state.isAdmin || state.activeUserId) inlineEditEffort(t); }},
+      el('span', { class: 'inline-cell-value' }, t.effort_hours ? t.effort_hours + ' h' : '—')
+    ),
+    planned_end: el('td', { class: 'inline-cell', onClick: (e) => { e.stopPropagation(); if (state.isAdmin || state.activeUserId) inlineEditDate(t); }},
+      el('span', { class: 'inline-cell-value' }, fmtDate(t.planned_end))
+    ),
+    status: el('td', { class: 'inline-cell', onClick: (e) => { 
+      e.stopPropagation(); 
+      if (state.isAdmin || state.activeUserId) inlineEditStatus(t, e.currentTarget); 
+    }},
+      el('span', { class: 'status-pill ' + statusClass(effective) }, effective)
+    )
   };
 }
 
@@ -1351,11 +1903,446 @@ function buildTaskTable(tasks) {
 
 function buildContactPill(c) {
   const label = contactPrimary(c);
-  const color = c.color || colorFromName(label);
+  // Wenn Kontakt zu einem Gewerk gehört → Gewerk-Farbe verwenden
+  const color = contactColor(c);
   return el('span', { class: 'contact-pill' },
     el('span', { class: 'avatar', style: `background:${color}` }, initials(c.name, c.company)),
     label
   );
+}
+
+// Kommentar-Indikator mit Custom-Tooltip (Hover + Touch)
+function buildCommentIndicator(taskId) {
+  const comments = state.comments.filter(c => c.task_id === taskId);
+  if (!comments.length) return null;
+  
+  const tooltip = el('div', { class: 'comment-tooltip' },
+    el('div', { class: 'comment-tooltip-title' }, comments.length + ' Notiz' + (comments.length > 1 ? 'en' : '')),
+    ...comments.slice(0, 4).map(c => el('div', { class: 'comment-tooltip-item' },
+      el('div', { class: 'comment-tooltip-meta' }, c.author + ' · ' + new Date(c.created_at).toLocaleDateString('de-CH', { day:'2-digit', month:'2-digit', year:'2-digit' })),
+      el('div', { class: 'comment-tooltip-text' }, c.body.length > 120 ? c.body.slice(0, 120) + '…' : c.body)
+    )),
+    comments.length > 4 ? el('div', { class: 'comment-tooltip-more' }, '+' + (comments.length - 4) + ' weitere…') : null
+  );
+  
+  const positionTooltip = (anchor) => {
+    document.body.appendChild(tooltip);
+    const rect = anchor.getBoundingClientRect();
+    const ttWidth = 300;
+    let left = rect.left + rect.width/2 - ttWidth/2;
+    if (left < 8) left = 8;
+    if (left + ttWidth > window.innerWidth - 8) left = window.innerWidth - ttWidth - 8;
+    let top = rect.bottom + 8;
+    // Falls nicht genug Platz unten, drüber
+    if (top + 200 > window.innerHeight) {
+      top = rect.top - 8 - 200;
+      if (top < 8) top = 8;
+    }
+    tooltip.style.left = left + 'px';
+    tooltip.style.top = top + 'px';
+    tooltip.classList.add('show');
+  };
+  
+  const hideTooltip = () => {
+    tooltip.classList.remove('show');
+    if (tooltip.parentNode === document.body) {
+      setTimeout(() => { if (!tooltip.classList.contains('show')) tooltip.remove(); }, 150);
+    }
+  };
+  
+  const wrap = el('span', { 
+    class: 'comment-indicator',
+    onClick: (e) => {
+      e.stopPropagation();
+      if (tooltip.classList.contains('show')) hideTooltip();
+      else positionTooltip(wrap);
+    },
+    onMouseenter: () => positionTooltip(wrap),
+    onMouseleave: () => hideTooltip()
+  },
+    icon('chat_bubble', 'sm'),
+    el('span', { class: 'comment-indicator-count' }, comments.length)
+  );
+  return wrap;
+}
+
+// ===== INLINE EDITING =====
+function inlineEditEffort(t) {
+  $$('.inline-popup-overlay').forEach(o => o.remove());
+  const overlay = el('div', { class: 'inline-popup-overlay', onClick: (e) => {
+    if (e.target === overlay) overlay.remove();
+  }});
+  
+  const quickHours = [1, 2, 4, 8, 16, 24, 40];
+  
+  const popup = el('div', { class: 'inline-popup', style: 'min-width: 320px' },
+    el('div', { class: 'inline-popup-title' }, 'Aufwand (Stunden)'),
+    el('div', { style: 'display:flex; gap:6px; align-items:center; margin-bottom: 12px' },
+      el('input', { 
+        type: 'number', 
+        id: 'inline-effort-input', 
+        value: t.effort_hours || '',
+        placeholder: '0',
+        step: '0.5',
+        min: '0',
+        style: 'flex:1; padding:10px 12px; border-radius: var(--radius-md); border:1px solid var(--border-strong); background: var(--bg); font-variant-numeric: tabular-nums',
+        onKeydown: (e) => { if (e.key === 'Enter') { e.preventDefault(); save(); } }
+      }),
+      el('span', { class: 'text-muted', style: 'font-weight: 500' }, 'h')
+    ),
+    // Quick-Picks
+    el('div', { style: 'margin-bottom: 12px' },
+      el('div', { class: 'text-muted text-sm', style: 'margin-bottom: 6px' }, 'Schnellauswahl:'),
+      el('div', { style: 'display:flex; flex-wrap:wrap; gap:6px' },
+        ...quickHours.map(h => el('button', {
+          type: 'button',
+          class: 'floor-chip' + (t.effort_hours === h ? ' active' : ''),
+          onClick: () => { $('#inline-effort-input').value = h; }
+        }, h + 'h'))
+      )
+    ),
+    el('div', { class: 'flex gap-2', style: 'justify-content:flex-end' },
+      t.effort_hours ? el('button', { class: 'btn small danger', onClick: async () => {
+        overlay.remove();
+        await saveTaskField(t, 'effort_hours', null, 'Aufwand entfernt');
+      }}, icon('delete', 'sm'), 'Entfernen') : null,
+      el('button', { class: 'btn small', onClick: () => overlay.remove() }, 'Abbrechen'),
+      el('button', { class: 'btn small primary', onClick: () => save() }, icon('check', 'sm'), 'Speichern')
+    )
+  );
+  
+  const save = async () => {
+    const raw = $('#inline-effort-input').value;
+    const num = raw.trim() === '' ? null : parseFloat(raw.replace(',', '.'));
+    if (raw.trim() !== '' && (isNaN(num) || num < 0)) { 
+      toast('Ungültige Zahl', 'error'); 
+      return; 
+    }
+    overlay.remove();
+    if (num === (t.effort_hours || null)) return;
+    await saveTaskField(t, 'effort_hours', num, num !== null ? `Aufwand: ${num} h` : 'Aufwand entfernt');
+  };
+  
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+  setTimeout(() => {
+    const inp = $('#inline-effort-input');
+    if (inp) { inp.focus(); inp.select(); }
+  }, 50);
+}
+
+function inlineEditDate(t) {
+  // Inline overlay statt prompt für besseres UX
+  const old = t.planned_end || '';
+  const overlay = el('div', { class: 'inline-popup-overlay', onClick: (e) => {
+    if (e.target === overlay) overlay.remove();
+  }});
+  const popup = el('div', { class: 'inline-popup' },
+    el('div', { class: 'inline-popup-title' }, 'Termin setzen'),
+    el('input', { type: 'date', id: 'inline-date', value: old, style: 'width:100%; padding:10px 12px; border-radius: var(--radius-md); border:1px solid var(--border-strong); background: var(--bg); margin-bottom: 12px' }),
+    el('div', { class: 'flex gap-2', style: 'justify-content:flex-end' },
+      old ? el('button', { class: 'btn small danger', onClick: async () => {
+        overlay.remove();
+        await saveTaskField(t, 'planned_end', null, 'Termin entfernt');
+      }}, icon('delete', 'sm'), 'Entfernen') : null,
+      el('button', { class: 'btn small', onClick: () => overlay.remove() }, 'Abbrechen'),
+      el('button', { class: 'btn small primary', onClick: async () => {
+        const newVal = $('#inline-date').value || null;
+        overlay.remove();
+        if (newVal !== old) await saveTaskField(t, 'planned_end', newVal, newVal ? `Termin: ${fmtDate(newVal)}` : 'Termin entfernt');
+      }}, icon('check', 'sm'), 'Speichern')
+    )
+  );
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+  setTimeout(() => $('#inline-date').focus(), 50);
+}
+
+function inlineEditStatus(t, anchor) {
+  // Closes existing popup
+  $$('.inline-popup-overlay').forEach(o => o.remove());
+  const overlay = el('div', { class: 'inline-popup-overlay', onClick: (e) => {
+    if (e.target === overlay) overlay.remove();
+  }});
+  const popup = el('div', { class: 'inline-popup' },
+    el('div', { class: 'inline-popup-title' }, 'Status ändern'),
+    el('div', { class: 'flex', style: 'flex-direction:column; gap:6px' },
+      ...STATUS_LIST.map(s => el('button', { 
+        class: 'btn' + (t.status === s ? ' primary' : ''),
+        style: 'justify-content:flex-start',
+        onClick: async () => {
+          overlay.remove();
+          if (t.status === s) return;
+          // Bei "Erledigt" zum Datum-Picker
+          if (s === 'Erledigt') {
+            markTaskDoneWithDate(t.id);
+          } else {
+            await updateTaskStatus(t.id, s);
+          }
+        }
+      }, el('span', { class: 'status-pill ' + statusClass(s) }, s)))
+    )
+  );
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+}
+
+function inlineEditFloors(t) {
+  $$('.inline-popup-overlay').forEach(o => o.remove());
+  const overlay = el('div', { class: 'inline-popup-overlay', onClick: (e) => {
+    if (e.target === overlay) overlay.remove();
+  }});
+  const selected = new Set(t.floors || []);
+  const popup = el('div', { class: 'inline-popup' },
+    el('div', { class: 'inline-popup-title' }, 'Stockwerke wählen'),
+    el('div', { class: 'flex', style: 'flex-wrap:wrap; gap:6px; margin-bottom: 12px' },
+      ...FLOORS.map(f => {
+        const btn = el('button', { 
+          class: 'floor-chip' + (selected.has(f) ? ' active' : ''),
+          onClick: () => {
+            if (selected.has(f)) selected.delete(f);
+            else selected.add(f);
+            btn.className = 'floor-chip' + (selected.has(f) ? ' active' : '');
+          }
+        }, f);
+        return btn;
+      })
+    ),
+    el('div', { class: 'flex gap-2', style: 'justify-content:flex-end' },
+      el('button', { class: 'btn small', onClick: () => overlay.remove() }, 'Abbrechen'),
+      el('button', { class: 'btn small primary', onClick: async () => {
+        overlay.remove();
+        await saveTaskField(t, 'floors', [...selected], 'Stockwerke aktualisiert');
+      }}, 'Speichern')
+    )
+  );
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+}
+
+function inlineEditCompletedAt(t) {
+  $$('.inline-popup-overlay').forEach(o => o.remove());
+  const overlay = el('div', { class: 'inline-popup-overlay', onClick: (e) => {
+    if (e.target === overlay) overlay.remove();
+  }});
+  const currentDate = t.completed_at ? t.completed_at.slice(0, 10) : new Date().toISOString().slice(0, 10);
+  
+  const popup = el('div', { class: 'inline-popup' },
+    el('div', { class: 'inline-popup-title' }, 'Erledigt-Datum ändern'),
+    el('input', { 
+      type: 'date', 
+      id: 'inline-completed-date', 
+      value: currentDate,
+      style: 'width:100%; padding:10px 12px; border-radius: var(--radius-md); border:1px solid var(--border-strong); background: var(--bg); margin-bottom: 12px',
+      onKeydown: (e) => { if (e.key === 'Enter') { e.preventDefault(); save(); } }
+    }),
+    el('div', { class: 'flex gap-2', style: 'justify-content:flex-end' },
+      el('button', { class: 'btn small', onClick: () => overlay.remove() }, 'Abbrechen'),
+      el('button', { class: 'btn small primary', onClick: () => save() }, icon('check', 'sm'), 'Speichern')
+    )
+  );
+  
+  const save = async () => {
+    const newDate = $('#inline-completed-date').value;
+    if (!newDate) { toast('Datum darf nicht leer sein', 'error'); return; }
+    overlay.remove();
+    const newIso = new Date(newDate + 'T12:00:00').toISOString();
+    await sb.from('tasks').update({ completed_at: newIso }).eq('id', t.id);
+    t.completed_at = newIso;
+    await sb.from('activity_log').insert({ 
+      task_id: t.id, 
+      actor: state.activeUser || 'Admin', 
+      contact_id: state.activeUserId || null, 
+      action: 'Erledigt-Datum geändert auf ' + newDate 
+    });
+    toast('Datum aktualisiert');
+    await loadAll();
+    render();
+  };
+  
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+  setTimeout(() => $('#inline-completed-date')?.focus(), 50);
+}
+
+function inlineEditArea(t) {
+  $$('.inline-popup-overlay').forEach(o => o.remove());
+  // Vorhandene Bereiche sammeln für Vorschläge
+  const existingAreas = [...new Set(state.tasks.map(x => x.area).filter(Boolean))].sort((a,b) => a.localeCompare(b, 'de'));
+  
+  const overlay = el('div', { class: 'inline-popup-overlay', onClick: (e) => {
+    if (e.target === overlay) overlay.remove();
+  }});
+  
+  const popup = el('div', { class: 'inline-popup', style: 'min-width: 320px' },
+    el('div', { class: 'inline-popup-title' }, 'Bereich'),
+    el('input', { 
+      type: 'text', 
+      id: 'inline-area-input', 
+      value: t.area || '',
+      placeholder: 'z.B. Küche, Bad, Empfang…',
+      list: 'inline-area-list',
+      style: 'width:100%; padding:10px 12px; border-radius: var(--radius-md); border:1px solid var(--border-strong); background: var(--bg); margin-bottom: 12px',
+      onKeydown: (e) => { if (e.key === 'Enter') { e.preventDefault(); save(); } }
+    }),
+    existingAreas.length ? el('datalist', { id: 'inline-area-list' },
+      ...existingAreas.map(a => el('option', { value: a }))
+    ) : null,
+    // Quick-Picks: bisher verwendete Bereiche als Chips
+    existingAreas.length ? el('div', { style: 'margin-bottom: 12px' },
+      el('div', { class: 'text-muted text-sm', style: 'margin-bottom: 6px' }, 'Bisher verwendet:'),
+      el('div', { style: 'display:flex; flex-wrap:wrap; gap:6px' },
+        ...existingAreas.slice(0, 12).map(a => el('button', {
+          type: 'button',
+          class: 'floor-chip' + (t.area === a ? ' active' : ''),
+          onClick: () => { $('#inline-area-input').value = a; }
+        }, a))
+      )
+    ) : null,
+    el('div', { class: 'flex gap-2', style: 'justify-content:flex-end' },
+      t.area ? el('button', { class: 'btn small danger', onClick: async () => {
+        overlay.remove();
+        await saveTaskField(t, 'area', null, 'Bereich entfernt');
+      }}, icon('delete', 'sm'), 'Entfernen') : null,
+      el('button', { class: 'btn small', onClick: () => overlay.remove() }, 'Abbrechen'),
+      el('button', { class: 'btn small primary', onClick: () => save() }, icon('check', 'sm'), 'Speichern')
+    )
+  );
+  
+  const save = async () => {
+    const value = $('#inline-area-input').value.trim();
+    overlay.remove();
+    if (value === (t.area || '')) return;
+    await saveTaskField(t, 'area', value || null, value ? `Bereich: ${value}` : 'Bereich entfernt');
+  };
+  
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+  setTimeout(() => {
+    const inp = $('#inline-area-input');
+    if (inp) { inp.focus(); inp.select(); }
+  }, 50);
+}
+
+function inlineEditResponsible(t) {
+  $$('.inline-popup-overlay').forEach(o => o.remove());
+  const overlay = el('div', { class: 'inline-popup-overlay', onClick: (e) => {
+    if (e.target === overlay) overlay.remove();
+  }});
+  const popup = el('div', { class: 'inline-popup' },
+    el('div', { class: 'inline-popup-title' }, 'Verantwortlich'),
+    el('select', { id: 'inline-resp-select', style: 'width:100%; padding:10px 12px; border-radius: var(--radius-md); border:1px solid var(--border-strong); background: var(--bg); margin-bottom: 12px' },
+      el('option', { value: '' }, '— niemand —'),
+      ...state.contacts.map(c => el('option', { 
+        value: c.id, 
+        selected: t.responsible_id === c.id 
+      }, contactPrimary(c) + (c.trade ? ' (' + tradeDisplayName(c.trade) + ')' : '')))
+    ),
+    el('div', { class: 'flex gap-2', style: 'justify-content:flex-end' },
+      el('button', { class: 'btn small', onClick: () => overlay.remove() }, 'Abbrechen'),
+      el('button', { class: 'btn small primary', onClick: async () => {
+        const newVal = $('#inline-resp-select').value || null;
+        overlay.remove();
+        const oldName = t.responsible_id ? contactPrimary(contactById(t.responsible_id) || {}) : '—';
+        const newName = newVal ? contactPrimary(contactById(newVal) || {}) : '—';
+        await saveTaskField(t, 'responsible_id', newVal, `Verantwortlich: ${oldName} → ${newName}`);
+      }}, 'Speichern')
+    )
+  );
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+}
+
+function inlineEditSubs(t) {
+  $$('.inline-popup-overlay').forEach(o => o.remove());
+  const overlay = el('div', { class: 'inline-popup-overlay', onClick: (e) => {
+    if (e.target === overlay) overlay.remove();
+  }});
+  const selected = new Set(subContactIds(t));
+  const popup = el('div', { class: 'inline-popup', style: 'min-width: 320px; max-width: 420px' },
+    el('div', { class: 'inline-popup-title' }, 'Ausführung / Gewerke'),
+    el('div', { id: 'sub-chips', style: 'display:flex; flex-wrap:wrap; gap:6px; margin-bottom: 10px; min-height: 30px' }),
+    el('select', { id: 'inline-sub-select', onChange: (e) => {
+      const id = e.target.value;
+      if (id && !selected.has(id)) {
+        selected.add(id);
+        refreshChips();
+      }
+      e.target.value = '';
+    }, style: 'width:100%; padding:10px 12px; border-radius: var(--radius-md); border:1px solid var(--border-strong); background: var(--bg); margin-bottom: 12px' }),
+    el('div', { class: 'flex gap-2', style: 'justify-content:flex-end' },
+      el('button', { class: 'btn small', onClick: () => overlay.remove() }, 'Abbrechen'),
+      el('button', { class: 'btn small primary', onClick: async () => {
+        overlay.remove();
+        await saveTaskField(t, 'sub_responsible_ids', [...selected], 'Ausführung aktualisiert');
+      }}, 'Speichern')
+    )
+  );
+  
+  const refreshChips = () => {
+    const chips = popup.querySelector('#sub-chips');
+    const sel = popup.querySelector('#inline-sub-select');
+    chips.innerHTML = '';
+    [...selected].forEach(id => {
+      const c = contactById(id);
+      if (!c) return;
+      const chip = el('span', { class: 'chip' },
+        c.trade ? el('span', { style: `display:inline-block; width:6px; height:6px; border-radius:50%; background:${tradeColor(c.trade)}; margin-right:4px` }) : null,
+        contactPrimary(c) + (c.trade ? ' (' + tradeDisplayName(c.trade) + ')' : ''),
+        el('button', { type: 'button', onClick: () => {
+          selected.delete(id);
+          refreshChips();
+        }}, icon('close', 'sm'))
+      );
+      chips.appendChild(chip);
+    });
+    // Rebuild dropdown
+    sel.innerHTML = '';
+    sel.appendChild(el('option', { value: '' }, '+ Gewerk / Kontakt hinzufügen…'));
+    state.contacts.filter(c => c.trade && !selected.has(c.id))
+      .forEach(c => sel.appendChild(el('option', { value: c.id }, 
+        contactPrimary(c) + (c.trade ? ' (' + tradeDisplayName(c.trade) + ')' : ''))));
+  };
+  
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+  refreshChips();
+}
+
+async function saveTaskField(t, field, value, message) {
+  const oldValue = t[field];
+  if (oldValue === value) return;
+  const actor = state.activeUser || (state.isAdmin ? 'Admin' : 'Gast');
+  const update = { [field]: value };
+  const { error } = await sb.from('tasks').update(update).eq('id', t.id);
+  if (error) { toast('Fehler: ' + error.message, 'error'); return; }
+  
+  // Activity log mit Detail
+  const labels = { effort_hours: 'Aufwand', planned_end: 'Termin', status: 'Status', risk: 'Risiko', notes: 'Notizen' };
+  const detail = `${labels[field] || field}: ${formatFieldValue(field, oldValue)} → ${formatFieldValue(field, value)}`;
+  await sb.from('activity_log').insert({ 
+    task_id: t.id, 
+    actor, 
+    contact_id: state.activeUserId || null,
+    action: detail,
+    details: { field, from: oldValue, to: value }
+  });
+  
+  t[field] = value;
+  toast(message || 'Gespeichert');
+  await loadAll();
+  render();
+}
+
+function formatFieldValue(field, value) {
+  if (value === null || value === undefined || value === '') return '—';
+  if (field === 'planned_end') return fmtDate(value);
+  if (field === 'effort_hours') return value + ' h';
+  if (field === 'risk') {
+    const names = { 0: 'Kein Risiko', 1: 'Gering', 2: 'Mittel', 3: 'Hoch' };
+    return names[value] || value;
+  }
+  return String(value);
 }
 
 // ===== TASKS VIEW =====
@@ -1428,7 +2415,7 @@ function refreshTaskTable() {
   if (!tasks.length) scroll.appendChild(el('div', { class: 'empty-state' }, icon('inbox', 'xl'), el('h3', {}, 'Keine Aufgaben')));
 }
 
-// ===== BOARD (Kanban mit Drag & Drop) =====
+// ===== BOARD (Kanban mit Drag & Drop, auch Touch) =====
 function renderKanban() {
   const main = $('#main');
   main.innerHTML = '';
@@ -1440,31 +2427,9 @@ function renderKanban() {
       if (status === 'Offen') return t.status === 'Offen' && !isTaskBlocked(t);
       return t.status === status;
     });
-    const colBody = el('div', { class: 'kanban-col-body' }, ...tasks.map(t => buildKanbanCard(t)));
-    const col = el('div', { 
-      class: 'kanban-col', 
-      'data-status': status,
-      onDragover: (e) => { e.preventDefault(); col.classList.add('drag-over'); },
-      onDragleave: (e) => { 
-        // Nur entfernen wenn wir wirklich raus aus der col sind
-        if (!col.contains(e.relatedTarget)) col.classList.remove('drag-over');
-      },
-      onDrop: async (e) => {
-        e.preventDefault();
-        col.classList.remove('drag-over');
-        const taskId = e.dataTransfer.getData('text/task-id');
-        const t = state.tasks.find(x => x.id === taskId);
-        if (!t) return;
-        // Bei Blockiert (implizit) → nicht ändern wenn schon implizit blockiert
-        let newStatus = status;
-        if (status === 'Blockiert' && isTaskBlocked(t)) {
-          // ist eh schon implizit blockiert, nichts tun
-          return;
-        }
-        if (t.status === newStatus) return;
-        await updateTaskStatus(t.id, newStatus);
-      }
-    },
+    const colBody = el('div', { class: 'kanban-col-body', 'data-status': status });
+    tasks.forEach(t => colBody.appendChild(buildKanbanCard(t)));
+    const col = el('div', { class: 'kanban-col', 'data-status': status },
       el('div', { class: 'kanban-col-head' },
         el('h3', { class: statusClass(status) }, icon(statusIcons[status], 'sm'), status),
         el('span', { class: 'kanban-col-count' }, tasks.length)
@@ -1474,38 +2439,57 @@ function renderKanban() {
     wrap.appendChild(col);
   });
   main.appendChild(wrap);
+
+  // SortableJS einrichten (funktioniert auch auf Touch)
+  $$('.kanban-col-body').forEach(colBody => {
+    if (typeof Sortable === 'undefined') return;
+    Sortable.create(colBody, {
+      group: 'kanban',
+      animation: 180,
+      ghostClass: 'kanban-card-ghost',
+      chosenClass: 'kanban-card-chosen',
+      dragClass: 'kanban-card-drag',
+      delay: 100,           // 100ms hold to start drag on touch
+      delayOnTouchOnly: true,
+      touchStartThreshold: 5,
+      onEnd: async (evt) => {
+        const newStatus = evt.to.dataset.status;
+        const oldStatus = evt.from.dataset.status;
+        const taskId = evt.item.dataset.taskId;
+        if (newStatus === oldStatus) return;
+        const t = state.tasks.find(x => x.id === taskId);
+        if (!t) return;
+        // Bei "Blockiert" via implizit blockiert → nicht überschreiben
+        if (newStatus === 'Blockiert' && isTaskBlocked(t)) {
+          // unsere "implizit blockierte" - direkt explizit setzen
+        }
+        await updateTaskStatus(t.id, newStatus);
+      }
+    });
+  });
 }
 
 function buildKanbanCard(t) {
   const resp = contactById(t.responsible_id);
   const subs = subContacts(t);
   const tradeNames = [...new Set(subs.map(s => s.trade).filter(Boolean))];
-  const card = el('div', {
+  const commentCount = state.comments.filter(c => c.task_id === t.id).length;
+  return el('div', {
     class: 'kanban-card',
-    draggable: true,
     'data-task-id': t.id,
-    onClick: () => openTaskDetail(t.id),
-    onDragstart: (e) => {
-      e.dataTransfer.setData('text/task-id', t.id);
-      e.dataTransfer.effectAllowed = 'move';
-      card.classList.add('dragging');
-    },
-    onDragend: () => {
-      card.classList.remove('dragging');
-      $$('.kanban-col.drag-over').forEach(c => c.classList.remove('drag-over'));
-    }
+    onClick: () => openTaskDetail(t.id)
   },
     el('div', { class: 'kanban-card-meta' },
       ...(t.floors||[]).map(f => el('span', { class: 'floor-tag' }, f)),
       t.area ? el('span', { class: 'floor-tag' }, t.area) : null,
-      ...tradeNames.map(tn => el('span', { class: 'floor-tag' }, tn))
+      ...tradeNames.map(tn => el('span', { class: 'floor-tag trade-tag', style: `--trade-color:${tradeColor(tn)}` }, tradeDisplayName(tn)))
     ),
     el('div', { class: 'kanban-card-title' }, t.title),
     el('div', { class: 'kanban-card-foot' },
-      resp ? buildContactPill(resp) : (subs[0] ? buildContactPill(subs[0]) : null)
+      resp ? buildContactPill(resp) : (subs[0] ? buildContactPill(subs[0]) : null),
+      commentCount > 0 ? el('span', { style: 'margin-left:auto' }, buildCommentIndicator(t.id)) : null
     )
   );
-  return card;
 }
 
 // ===== FLOORS =====
@@ -1650,9 +2634,16 @@ function renderTrades() {
   // Hero-Section mit Trade-Statistiken
   main.appendChild(el('div', { class: 'section' },
     el('div', { class: 'section-head' },
-      el('h2', {}, icon('construction'), activeTrade),
-      el('button', { class: 'btn small', onClick: () => { state.currentTrade = null; renderTrades(); } }, 
-        icon('arrow_back', 'sm'), 'Zur Übersicht')
+      el('h2', {}, 
+        el('span', { style: `display:inline-block; width:14px; height:14px; border-radius:50%; background:${tradeColor(activeTrade)}; vertical-align: middle; margin-right: 8px` }),
+        tradeDisplayName(activeTrade)
+      ),
+      el('div', { class: 'flex gap-2' },
+        state.isAdmin ? el('button', { class: 'btn small', onClick: () => openTradeEdit(activeTrade) }, 
+          icon('edit', 'sm'), 'Bearbeiten') : null,
+        el('button', { class: 'btn small', onClick: () => { state.currentTrade = null; renderTrades(); } }, 
+          icon('arrow_back', 'sm'), 'Übersicht')
+      )
     ),
     buildTradeDetailHero(activeTrade, s)
   ));
@@ -1678,7 +2669,7 @@ function renderTrades() {
 
 function buildTradeStatCard(tradeName, s) {
   const hasH = s.totalH > 0;
-  const color = colorFromName(tradeName);
+  const color = tradeColor(tradeName);
   
   return el('div', {
     class: 'trade-stat-card',
@@ -1691,8 +2682,19 @@ function buildTradeStatCard(tradeName, s) {
   },
     // Header
     el('div', { class: 'trade-stat-head' },
-      el('div', { class: 'trade-stat-name' }, tradeName),
-      el('div', { class: 'trade-stat-pct' }, s.pct + '%')
+      el('div', { class: 'trade-stat-name', style: 'display:flex; align-items:center; gap:8px' },
+        el('span', { style: `display:inline-block; width:10px; height:10px; border-radius:50%; background:${color}` }),
+        tradeDisplayName(tradeName)
+      ),
+      el('div', { style: 'display:flex; align-items:center; gap:8px' },
+        state.isAdmin ? el('button', { 
+          class: 'btn small icon-only', 
+          title: 'Gewerk bearbeiten',
+          style: 'padding: 4px 6px',
+          onClick: (e) => { e.stopPropagation(); openTradeEdit(tradeName); }
+        }, icon('edit', 'sm')) : null,
+        el('div', { class: 'trade-stat-pct' }, s.pct + '%')
+      )
     ),
     // Progress Bar
     el('div', { class: 'progress-bar' }, 
@@ -1831,7 +2833,6 @@ function renderContacts() {
 
   if (!filtered.length) {
     main.appendChild(el('div', { class: 'empty-state' }, icon('search_off', 'xl'), el('h3', {}, 'Keine Treffer')));
-    if (state.isAdmin) main.appendChild(el('button', { class: 'btn primary mt-2', onClick: () => openContactEdit() }, icon('add', 'sm'), 'Neuer Kontakt'));
     return;
   }
 
@@ -1860,12 +2861,6 @@ function renderContacts() {
       el('div', { class: 'contacts-grid' }, ...filtered.map(c => buildContactCard(c)))
     ));
   }
-
-  if (state.isAdmin) {
-    main.appendChild(el('button', { class: 'btn primary mt-2', onClick: () => openContactEdit() },
-      icon('add', 'sm'), 'Neuer Kontakt'
-    ));
-  }
 }
 
 function buildContactCard(c) {
@@ -1873,7 +2868,7 @@ function buildContactCard(c) {
   const open = tasks.filter(t => t.status !== 'Erledigt').length;
   const primary = contactPrimary(c);
   const secondary = contactSecondary(c);
-  const color = c.color || colorFromName(primary);
+  const color = contactColor(c);
   return el('div', { class: 'contact-card', onClick: () => { state.contactDetail = c.id; renderContacts(); } },
     el('div', { class: 'contact-card-head' },
       el('div', { class: 'contact-card-avatar', style: `background:${color}` }, initials(c.name, c.company)),
@@ -1902,7 +2897,7 @@ function renderContactDetail(contactId) {
   if (!c) { state.contactDetail = null; renderContacts(); return; }
   const tasks = tasksForContact(contactId);
   const primary = contactPrimary(c);
-  const color = c.color || colorFromName(primary);
+  const color = contactColor(c);
 
   main.appendChild(
     el('div', { class: 'section' },
@@ -1948,30 +2943,123 @@ function renderTimeline() {
     main.appendChild(el('div', { class: 'empty-state' },
       icon('event_busy', 'xl'),
       el('h3', {}, 'Keine Termine gepflegt'),
-      el('div', { class: 'text-muted' }, 'Sobald Liefertermine eingetragen sind, erscheinen sie hier.')
+      el('div', { class: 'text-muted' }, 'Sobald Termine eingetragen sind, erscheinen sie hier.')
     ));
     return;
   }
+  
+  const today = new Date(); today.setHours(0,0,0,0);
   const dates = withDate.map(t => new Date(t.planned_end).getTime());
-  const min = Math.min(...dates), max = Math.max(...dates), range = max - min || 1;
-  const tl = el('div', { class: 'timeline' });
+  const min = Math.min(...dates, today.getTime());
+  const max = Math.max(...dates, today.getTime());
+  const range = max - min || 1;
+  const todayPct = ((today.getTime() - min) / range) * 100;
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  const taskColWidth = isMobile ? 140 : 360;
+  
+  // Legende
+  main.appendChild(el('div', { class: 'timeline-legend' },
+    el('div', { class: 'flex gap-2', style: 'align-items:center' },
+      el('span', { class: 'timeline-legend-dot', style: 'background:var(--sys-success)' }),
+      el('span', { class: 'text-sm' }, 'Erledigt')
+    ),
+    el('div', { class: 'flex gap-2', style: 'align-items:center' },
+      el('span', { class: 'timeline-legend-dot', style: 'background:var(--accent)' }),
+      el('span', { class: 'text-sm' }, 'Geplant')
+    ),
+    el('div', { class: 'flex gap-2', style: 'align-items:center' },
+      el('span', { class: 'timeline-legend-dot', style: 'background:var(--sys-error)' }),
+      el('span', { class: 'text-sm' }, 'Überfällig')
+    ),
+    el('div', { class: 'flex gap-2', style: 'align-items:center' },
+      el('span', { class: 'timeline-legend-line' }),
+      el('span', { class: 'text-sm' }, 'Heute · ' + today.toLocaleDateString('de-CH', { day:'2-digit', month:'2-digit', year:'2-digit' }))
+    )
+  ));
+  
+  // Header
+  const header = el('div', { class: 'timeline-row timeline-header' },
+    el('div', { class: 'timeline-task', style: `width:${taskColWidth}px; color: var(--fg-muted); font-weight:500; font-size:11px; text-transform: uppercase; letter-spacing: 0.05em` }, 'Aufgabe · Zuständig'),
+    el('div', { class: 'timeline-bar-track', style: 'background:transparent' },
+      el('div', { class: 'timeline-date-min' }, fmtDateShort(min)),
+      el('div', { class: 'timeline-date-max' }, fmtDateShort(max))
+    )
+  );
+  
+  // Rows mit Verspätung neben dem Datums-Bar
+  const rows = [header];
   withDate.forEach(t => {
     const d = new Date(t.planned_end).getTime();
+    const taskDayStart = new Date(new Date(t.planned_end).setHours(0,0,0,0)).getTime();
     const pct = ((d - min) / range) * 100;
-    const cls = t.status === 'Erledigt' ? 'done' : (isTaskBlocked(t) ? 'blocked' : '');
-    tl.appendChild(
-      el('div', { class: 'timeline-row', onClick: () => openTaskDetail(t.id), style: 'cursor:pointer' },
-        el('div', { class: 'timeline-task' },
-          el('strong', {}, t.title),
-          el('small', {}, (t.area || '—') + ' · ' + (t.floors||[]).join(', '))
+    const isDone = t.status === 'Erledigt';
+    const blocked = isTaskBlocked(t) && !isDone;
+    const overdueDays = !isDone ? Math.floor((today.getTime() - taskDayStart) / 86400000) : 0;
+    const overdue = overdueDays >= 1;
+    const resp = contactById(t.responsible_id);
+    const subs = subContacts(t);
+    const showContact = resp || subs[0];
+    
+    let cls = '';
+    if (isDone) cls = 'done';
+    else if (overdue) cls = 'overdue';
+    else if (blocked) cls = 'blocked';
+    
+    // Bar Position: links bei <60%, rechts bei >60% (für besseres Layout)
+    const barLeftPercent = Math.max(0, Math.min(95, pct - 2));
+    // Tage-Tag rechts oder links vom Datum-Bar je nach Position
+    const overdueOnRight = pct < 70;
+    
+    rows.push(
+      el('div', { class: 'timeline-row' + (isDone ? ' is-done' : ''), onClick: () => openTaskDetail(t.id), style: 'cursor:pointer' },
+        el('div', { class: 'timeline-task', style: `width:${taskColWidth}px` },
+          el('div', { class: 'timeline-task-title' + (isDone ? ' done' : '') }, t.title),
+          el('div', { class: 'timeline-task-meta' },
+            showContact ? buildContactPill(showContact) : el('span', { class: 'text-muted text-sm' }, '— Niemand zugewiesen —')
+          )
         ),
         el('div', { class: 'timeline-bar-track' },
-          el('div', { class: 'timeline-bar ' + cls, style: `left: ${Math.max(0, pct-3)}%` }, fmtDateShort(t.planned_end))
+          el('div', { 
+            class: 'timeline-bar-with-label',
+            style: `left: ${barLeftPercent}%`
+          },
+            el('div', { class: 'timeline-bar ' + cls }, fmtDateShort(t.planned_end)),
+            overdue ? el('div', { class: 'timeline-overdue-tag' },
+              icon('priority_high', 'sm'),
+              `${overdueDays}T überfällig`
+            ) : null
+          )
         )
       )
     );
   });
+  
+  // Container mit Heute-Linie als Overlay
+  const tl = el('div', { class: 'timeline timeline-with-line' }, ...rows);
+  // Linie wird per JS positioniert (nicht via CSS calc, das nicht richtig funktioniert)
+  const line = el('div', { class: 'timeline-today-line-global' },
+    el('div', { class: 'timeline-today-dot' }),
+    el('div', { class: 'timeline-today-label' }, 'HEUTE'),
+    el('div', { class: 'timeline-today-date' }, today.toLocaleDateString('de-CH', { day:'2-digit', month:'2-digit' }))
+  );
+  tl.appendChild(line);
   main.appendChild(tl);
+  
+  // JS-basierte Positionierung der Heute-Linie (nach Layout)
+  requestAnimationFrame(() => {
+    const tracks = tl.querySelectorAll('.timeline-bar-track');
+    if (!tracks.length) return;
+    const firstTrack = tracks[0];
+    const tlRect = tl.getBoundingClientRect();
+    const trackRect = firstTrack.getBoundingClientRect();
+    const trackLeft = trackRect.left - tlRect.left;
+    const trackWidth = trackRect.width;
+    const linePx = trackLeft + (trackWidth * todayPct / 100);
+    line.style.left = linePx + 'px';
+    // Min/max Datum sollten sichtbar bleiben (Padding) - Top/Bottom füllt komplette Liste
+    line.style.top = '4px';
+    line.style.bottom = '4px';
+  });
 }
 
 // ===== ACTIVITY =====
@@ -1982,30 +3070,54 @@ function renderActivity() {
     main.appendChild(el('div', { class: 'empty-state' }, icon('history', 'xl'), el('h3', {}, 'Noch keine Aktivität')));
     return;
   }
-  const wrap = el('div', { class: 'task-table-wrap' });
-  const scroll = el('div', { class: 'task-table-scroll' });
-  const tbl = el('table', { class: 'task-table' },
-    el('thead', {}, el('tr', {},
-      el('th', {}, 'Wann'),
-      el('th', {}, 'Wer'),
-      el('th', {}, 'Was'),
-      el('th', {}, 'Aufgabe')
-    )),
-    el('tbody', {},
-      ...state.activity.map(a => {
-        const t = state.tasks.find(x => x.id === a.task_id);
-        return el('tr', { onClick: () => t && openTaskDetail(t.id) },
-          el('td', {}, new Date(a.created_at).toLocaleString('de-CH', { dateStyle:'short', timeStyle:'short' })),
-          el('td', {}, a.actor),
-          el('td', {}, a.action),
-          el('td', {}, t ? t.title : '—')
-        );
-      })
-    )
-  );
-  scroll.appendChild(tbl);
-  wrap.appendChild(scroll);
-  main.appendChild(wrap);
+  
+  // Activity-Items als Feed
+  const feed = el('div', { class: 'activity-feed' });
+  // Beschränken auf 100 neueste
+  state.activity.slice(0, 100).forEach(a => {
+    const t = state.tasks.find(x => x.id === a.task_id);
+    const actorContact = a.contact_id ? contactById(a.contact_id) : state.contacts.find(c => c.name === a.actor);
+    const displayName = actorContact ? contactPrimary(actorContact) : (a.actor || 'Unbekannt');
+    const subName = actorContact && actorContact.name && actorContact.company ? actorContact.company : null;
+    const color = actorContact ? contactColor(actorContact) : colorFromName(displayName);
+    
+    feed.appendChild(el('div', { 
+      class: 'activity-item',
+      onClick: () => t && openTaskDetail(t.id),
+      style: t ? 'cursor:pointer' : ''
+    },
+      el('div', { class: 'activity-avatar', style: `background:${color}` }, initials(actorContact?.name || displayName, actorContact?.company)),
+      el('div', { class: 'activity-body' },
+        el('div', { class: 'activity-who' },
+          el('div', { class: 'activity-who-name' }, displayName),
+          subName ? el('div', { class: 'activity-who-sub' }, subName) : null
+        ),
+        el('div', { class: 'activity-action' }, a.action),
+        t ? el('div', { class: 'activity-task' }, 
+          icon('checklist', 'sm'), 
+          el('span', { class: 'activity-task-text' }, t.title)
+        ) : el('div'),
+      ),
+      el('div', { class: 'activity-time', title: formatRelativeTime(a.created_at) }, 
+        new Date(a.created_at).toLocaleString('de-CH', { dateStyle: 'short', timeStyle: 'short' })
+      )
+    ));
+  });
+  main.appendChild(feed);
+}
+
+function formatRelativeTime(iso) {
+  const d = new Date(iso);
+  const now = new Date();
+  const diffMs = now - d;
+  const diffMin = Math.floor(diffMs / 60000);
+  if (diffMin < 1) return 'gerade eben';
+  if (diffMin < 60) return `vor ${diffMin} Min`;
+  const diffH = Math.floor(diffMin / 60);
+  if (diffH < 24) return `vor ${diffH} Std`;
+  const diffD = Math.floor(diffH / 24);
+  if (diffD < 7) return `vor ${diffD} Tag${diffD > 1 ? 'en' : ''}`;
+  return d.toLocaleDateString('de-CH', { day:'2-digit', month:'2-digit', year:'2-digit' });
 }
 
 // ===== TASK DETAIL =====
@@ -2031,15 +3143,46 @@ function openTaskDetail(taskId) {
       el('dt', {}, 'Stockwerk'), el('dd', {}, el('div', { class: 'floor-tags' }, ...(t.floors||[]).map(f => el('span', { class: 'floor-tag' }, f)))),
       el('dt', {}, 'Bereich'), el('dd', {}, t.area || '—'),
       el('dt', {}, 'Gewerk(e)'), el('dd', {}, tradeNames.length
-        ? el('div', { class: 'floor-tags' }, ...tradeNames.map(tn => el('span', { class: 'floor-tag' }, tn)))
+        ? el('div', { class: 'floor-tags' }, ...tradeNames.map(tn => el('span', { class: 'floor-tag trade-tag', style: `--trade-color:${tradeColor(tn)}` }, tradeDisplayName(tn))))
         : '—'),
       el('dt', {}, 'Verantwortlich'), el('dd', {}, resp ? buildContactPill(resp) : '—'),
       subs.length ? el('dt', {}, 'Ausführung') : null,
       subs.length ? el('dd', {}, el('div', { class: 'chip-list' }, ...subs.map(s => buildContactPill(s)))) : null,
       el('dt', {}, 'Abhängig von'), el('dd', {}, depItems.length ? el('div', { class: 'chip-list' }, ...depItems) : '—'),
-      el('dt', {}, 'Aufwand'), el('dd', {}, t.effort_hours ? t.effort_hours + ' h' : '—'),
-      el('dt', {}, 'Lieferfrist'), el('dd', {}, fmtDate(t.planned_end)),
-      el('dt', {}, 'Status'), el('dd', {}, el('span', { class: 'status-pill ' + statusClass(blocked ? 'Blockiert' : t.status) }, blocked ? 'Blockiert' : t.status))
+      el('dt', {}, 'Aufwand'), el('dd', {}, 
+        el('span', { 
+          class: state.isAdmin ? 'inline-editable' : '',
+          style: state.isAdmin ? 'cursor:pointer' : '',
+          onClick: state.isAdmin ? () => { closeModal(); inlineEditEffort(t); } : null,
+          title: state.isAdmin ? 'Klicken zum Bearbeiten' : ''
+        }, t.effort_hours ? t.effort_hours + ' h' : '—')
+      ),
+      el('dt', {}, 'Termin'), el('dd', {}, 
+        el('span', { 
+          class: state.isAdmin ? 'inline-editable' : '',
+          style: state.isAdmin ? 'cursor:pointer' : '',
+          onClick: state.isAdmin ? () => { closeModal(); inlineEditDate(t); } : null,
+          title: state.isAdmin ? 'Klicken zum Bearbeiten' : ''
+        }, fmtDate(t.planned_end))
+      ),
+      el('dt', {}, 'Risiko'), el('dd', {}, formatFieldValue('risk', t.risk)),
+      el('dt', {}, 'Status'), el('dd', {}, el('span', { class: 'status-pill ' + statusClass(blocked ? 'Blockiert' : t.status) }, blocked ? 'Blockiert' : t.status)),
+      isDone && t.completed_at ? el('dt', {}, 'Erledigt am') : null,
+      isDone && t.completed_at ? el('dd', {}, 
+        el('div', { style: 'display:flex; align-items:center; gap:8px; flex-wrap:wrap' },
+          icon('check_circle', 'sm'),
+          new Date(t.completed_at).toLocaleString('de-CH', { dateStyle: 'medium', timeStyle: 'short' }),
+          t.completed_by ? el('span', { class: 'text-muted text-sm' }, '· von ' + t.completed_by) : null,
+          state.isAdmin ? el('button', { class: 'btn small', style: 'margin-left:auto', 
+            title: 'Erledigt-Datum ändern',
+            onClick: (e) => {
+              e.stopPropagation();
+              closeModal();
+              inlineEditCompletedAt(t);
+            }
+          }, icon('edit', 'sm')) : null
+        )
+      ) : null
     ),
     t.notes ? el('div', { style: 'background: var(--bg-subtle); padding: 14px; border-radius: var(--radius-md); margin-bottom: 16px; font-size: 14px' },
       el('div', { class: 'text-muted text-sm mb-2' }, 'Notizen'),
@@ -2074,23 +3217,94 @@ function openTaskDetail(taskId) {
 
 // ===== ACTIONS =====
 async function toggleTaskDone(t) {
-  await updateTaskStatus(t.id, t.status === 'Erledigt' ? 'Offen' : 'Erledigt');
+  // Checkbox-Toggle: einfach umschalten, mit heute als Default-Datum
+  await updateTaskStatus(t.id, t.status === 'Erledigt' ? 'Offen' : 'Erledigt', { skipPrompt: true });
 }
 
-async function updateTaskStatus(taskId, newStatus) {
+// Setzt eine Aufgabe als erledigt mit Datum-Picker
+function markTaskDoneWithDate(taskId) {
+  const t = state.tasks.find(x => x.id === taskId);
+  if (!t) return;
+  $$('.inline-popup-overlay').forEach(o => o.remove());
+  const overlay = el('div', { class: 'inline-popup-overlay', onClick: (e) => {
+    if (e.target === overlay) overlay.remove();
+  }});
+  const today = new Date().toISOString().slice(0, 10);
+  
+  const popup = el('div', { class: 'inline-popup' },
+    el('div', { class: 'inline-popup-title' }, 'Aufgabe als erledigt markieren'),
+    el('div', { class: 'text-muted text-sm', style: 'margin-bottom: 8px' }, 'Wann wurde die Aufgabe erledigt?'),
+    el('input', { 
+      type: 'date', 
+      id: 'inline-done-date', 
+      value: today,
+      max: today,
+      style: 'width:100%; padding:10px 12px; border-radius: var(--radius-md); border:1px solid var(--border-strong); background: var(--bg); margin-bottom: 12px',
+      onKeydown: (e) => { if (e.key === 'Enter') { e.preventDefault(); save(); } }
+    }),
+    // Quick: heute / gestern
+    el('div', { style: 'display:flex; gap:6px; margin-bottom: 12px' },
+      el('button', { type: 'button', class: 'floor-chip active', onClick: () => { $('#inline-done-date').value = today; }}, 'Heute'),
+      el('button', { type: 'button', class: 'floor-chip', onClick: () => {
+        const y = new Date(); y.setDate(y.getDate() - 1);
+        $('#inline-done-date').value = y.toISOString().slice(0,10);
+      }}, 'Gestern')
+    ),
+    el('div', { class: 'flex gap-2', style: 'justify-content:flex-end' },
+      el('button', { class: 'btn small', onClick: () => overlay.remove() }, 'Abbrechen'),
+      el('button', { class: 'btn small primary', onClick: () => save() }, icon('check', 'sm'), 'Als erledigt markieren')
+    )
+  );
+  
+  const save = async () => {
+    const date = $('#inline-done-date').value || today;
+    overlay.remove();
+    await updateTaskStatus(taskId, 'Erledigt', { completedAt: date });
+  };
+  
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+  setTimeout(() => $('#inline-done-date')?.focus(), 50);
+}
+
+async function updateTaskStatus(taskId, newStatus, opts = {}) {
   const t = state.tasks.find(x => x.id === taskId);
   if (!t || t.status === newStatus) return;
   const oldStatus = t.status;
   const actor = state.activeUser || (state.isAdmin ? 'Admin' : 'Gast');
   const update = { status: newStatus };
-  if (newStatus === 'Erledigt') { update.completed_at = new Date().toISOString(); update.completed_by = actor; }
-  else if (oldStatus === 'Erledigt') { update.completed_at = null; update.completed_by = null; }
+  
+  if (newStatus === 'Erledigt') {
+    // Wenn explizites Datum mitgegeben → das nehmen, sonst heute (kein Prompt mehr)
+    let completedDate = opts.completedAt;
+    if (completedDate) {
+      if (completedDate.length === 10) {
+        update.completed_at = new Date(completedDate + 'T12:00:00').toISOString();
+      } else {
+        update.completed_at = new Date(completedDate).toISOString();
+      }
+    } else {
+      update.completed_at = new Date().toISOString();
+    }
+    update.completed_by = actor;
+  } else if (oldStatus === 'Erledigt') {
+    update.completed_at = null;
+    update.completed_by = null;
+  }
+  
   const { error } = await sb.from('tasks').update(update).eq('id', taskId);
   if (error) { toast('Fehler: ' + error.message, 'error'); return; }
-  await sb.from('activity_log').insert({ task_id: taskId, actor, action: `Status: ${oldStatus} → ${newStatus}` });
+  await sb.from('activity_log').insert({ 
+    task_id: taskId, 
+    actor, 
+    contact_id: state.activeUserId || null,
+    action: `Status: ${oldStatus} → ${newStatus}`,
+    details: { field: 'status', from: oldStatus, to: newStatus }
+  });
   Object.assign(t, update);
   toast(`Status: ${newStatus}`);
   closeModal();
+  await loadAll();
   render();
 }
 
@@ -2289,40 +3503,34 @@ function taskForm(t={}) {
     el('div', { class: 'form-group' },
       el('label', {}, 'Ausführung / Gewerke (mehrere möglich)'),
       subChipList(),
-      el('div', { class: 'flex gap-2 mt-2' },
-        el('select', { id: 't-sub-select', style: 'flex:1' },
-          el('option', { value: '' }, '— Gewerk / Kontakt auswählen —'),
-          ...state.contacts.filter(c => c.trade).map(c => el('option', { value: c.id },
-            contactPrimary(c) + (c.trade ? ' (' + c.trade + ')' : '')))
-        ),
-        el('button', { type: 'button', class: 'btn small', onClick: () => {
-          const sel = $('#t-sub-select');
-          const id = sel.value;
-          if (id && !subIds.includes(id)) {
-            subIds.push(id);
-            refreshSubChips();
-            sel.value = '';
-          }
-        }}, icon('add', 'sm'), 'Hinzufügen')
+      el('select', { id: 't-sub-select', class: 'mt-2', onChange: (e) => {
+        const id = e.target.value;
+        if (id && !subIds.includes(id)) {
+          subIds.push(id);
+          refreshSubChips();
+        }
+        e.target.value = '';
+      }},
+        el('option', { value: '' }, '— Gewerk / Kontakt auswählen —'),
+        ...state.contacts.filter(c => c.trade && !subIds.includes(c.id)).map(c => el('option', { value: c.id },
+          contactPrimary(c) + (c.trade ? ' (' + c.trade + ')' : '')))
       )
     ),
     el('div', { class: 'form-group' },
       el('label', {}, 'Abhängig von (Aufgaben die zuerst erledigt sein müssen)'),
       depChipList(),
-      el('div', { class: 'flex gap-2 mt-2' },
-        el('select', { id: 't-dep-select', style: 'flex:1' },
-          el('option', { value: '' }, '— Aufgabe auswählen —'),
-          ...state.tasks.filter(x => x.id !== t.id).map(x => el('option', { value: x.code }, x.title))
-        ),
-        el('button', { type: 'button', class: 'btn small', onClick: () => {
-          const sel = $('#t-dep-select');
-          const code = parseInt(sel.value);
-          if (code && !dependsOn.includes(code)) {
-            dependsOn.push(code);
-            refreshDepChips();
-            sel.value = '';
-          }
-        }}, icon('add', 'sm'), 'Hinzufügen')
+      el('select', { id: 't-dep-select', class: 'mt-2', onChange: (e) => {
+        const code = parseInt(e.target.value);
+        if (code && !dependsOn.includes(code)) {
+          dependsOn.push(code);
+          refreshDepChips();
+        }
+        e.target.value = '';
+      }},
+        el('option', { value: '' }, '— Aufgabe auswählen —'),
+        ...state.tasks.filter(x => x.id !== t.id && !dependsOn.includes(x.code))
+          .sort((a,b) => a.title.localeCompare(b.title, 'de'))
+          .map(x => el('option', { value: x.code }, x.title))
       )
     ),
     el('div', { class: 'form-row' },
@@ -2331,13 +3539,19 @@ function taskForm(t={}) {
         el('input', { id: 't-eff', type: 'number', step: '0.5', value: t.effort_hours || '' })
       ),
       el('div', { class: 'form-group' },
-        el('label', {}, 'Lieferfrist'),
+        el('label', {}, 'Termin'),
         el('input', { id: 't-end', type: 'date', value: t.planned_end || '' })
       )
     ),
     el('div', { class: 'form-group' },
-      el('label', {}, 'Risiko (0–3)'),
-      el('input', { id: 't-risk', type: 'number', min: '0', max: '3', value: t.risk ?? '' })
+      el('label', {}, 'Risikostufe'),
+      el('select', { id: 't-risk' },
+        el('option', { value: '', selected: (t.risk ?? '') === '' }, '— nicht eingestuft —'),
+        el('option', { value: '0', selected: t.risk === 0 }, '0 · Kein Risiko'),
+        el('option', { value: '1', selected: t.risk === 1 }, '1 · Gering'),
+        el('option', { value: '2', selected: t.risk === 2 }, '2 · Mittel'),
+        el('option', { value: '3', selected: t.risk === 3 }, '3 · Hoch / Kritisch')
+      )
     ),
     el('div', { class: 'form-group' },
       el('label', {}, 'Notizen'),
@@ -2426,7 +3640,7 @@ function openTaskNew() {
 
 // ===== CSV =====
 function exportCSV() {
-  const rows = [['Titel','Bereich','Stockwerke','Gewerk(e)','Verantwortlich','Firma','Abhängig von','Aufwand h','Lieferfrist','Risiko','Status','Notizen']];
+  const rows = [['Titel','Bereich','Stockwerke','Gewerk(e)','Verantwortlich','Firma','Abhängig von','Aufwand h','Termin','Risiko','Status','Notizen']];
   state.tasks.forEach(t => {
     const r = contactById(t.responsible_id);
     const subs = subContacts(t);
@@ -2603,9 +3817,15 @@ function render() {
   }
   const existingFab = $('#fab');
   if (existingFab) existingFab.remove();
-  if (state.isAdmin && ['dashboard','tasks','kanban','floors','trades','timeline'].includes(state.currentView)) {
-    const fab = el('button', { class: 'fab', id: 'fab', title: 'Neue Aufgabe', onClick: openTaskNew }, icon('add'));
-    document.body.appendChild(fab);
+  if (state.isAdmin) {
+    let fab = null;
+    if (state.currentView === 'contacts') {
+      // Auf der gesamten Kontakte-Seite (Liste & Detail)
+      fab = el('button', { class: 'fab', id: 'fab', title: 'Neuer Kontakt', onClick: () => openContactEdit() }, icon('person_add'));
+    } else if (['dashboard','tasks','kanban','floors','trades','timeline'].includes(state.currentView)) {
+      fab = el('button', { class: 'fab', id: 'fab', title: 'Neue Aufgabe', onClick: openTaskNew }, icon('add'));
+    }
+    if (fab) document.body.appendChild(fab);
   }
 }
 
@@ -2633,7 +3853,11 @@ async function init() {
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(updateHeader, 150);
+    resizeTimer = setTimeout(() => {
+      updateHeader();
+      // Timeline neu rendern damit die Heute-Linie sich neu positioniert
+      if (state.currentView === 'timeline') renderTimeline();
+    }, 150);
   });
 
   try {
